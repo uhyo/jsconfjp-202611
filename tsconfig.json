@@ -1,0 +1,59 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "moduleDetection": "force",
+    "jsx": "react-jsx",
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "types": ["node", "vite/client"],
+    // ingenui is consumed from source (see vite.config.ts / ingenui.config.ts).
+    // Each path lists the in-repo checkout first, then a sibling checkout.
+    "paths": {
+      // The ingenui source has no node_modules of its own here: resolve its
+      // `react` imports to this project's types.
+      "react": ["./node_modules/@types/react"],
+      "react/*": ["./node_modules/@types/react/*"],
+      "@ingenui/incremental-jsx-parser/react": [
+        "./vendor/ingenui/packages/incremental-jsx-parser/src/react.ts",
+        "../ingenui/packages/incremental-jsx-parser/src/react.ts"
+      ],
+      "@ingenui/incremental-jsx-parser/core": [
+        "./vendor/ingenui/packages/incremental-jsx-parser/src/core.ts",
+        "../ingenui/packages/incremental-jsx-parser/src/core.ts"
+      ],
+      "@ingenui/incremental-jsx-parser": [
+        "./vendor/ingenui/packages/incremental-jsx-parser/src/index.ts",
+        "../ingenui/packages/incremental-jsx-parser/src/index.ts"
+      ],
+      "ingenui/react": [
+        "./vendor/ingenui/packages/ingenui/src/react.ts",
+        "../ingenui/packages/ingenui/src/react.ts"
+      ],
+      "ingenui/schema": [
+        "./vendor/ingenui/packages/ingenui/src/schema.ts",
+        "../ingenui/packages/ingenui/src/schema.ts"
+      ],
+      "ingenui/server": [
+        "./vendor/ingenui/packages/ingenui/src/server.ts",
+        "../ingenui/packages/ingenui/src/server.ts"
+      ],
+      "ingenui": [
+        "./vendor/ingenui/packages/ingenui/src/index.ts",
+        "../ingenui/packages/ingenui/src/index.ts"
+      ]
+    }
+  },
+  "include": ["src", "plugins", "vite.config.ts"]
+}
