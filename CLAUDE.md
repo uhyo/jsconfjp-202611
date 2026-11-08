@@ -19,10 +19,9 @@ and the authoring format.
 
 - Slides are 1280×720 px; the template is 960×540 pt, so 1pt = 4/3 px.
   Template colors are CSS variables at the top of `deck.css`.
-- ingenui is consumed **from source** via aliases (`vite.config.ts`, found at
-  `$INGENUI_DIR`, `vendor/ingenui`, or `../ingenui`) and tsconfig `paths`.
-  Use only ingenui's public entries (`ingenui`, `ingenui/react`,
-  `ingenui/schema`, `ingenui/server`, `@ingenui/incremental-jsx-parser{,/react,/core}`).
+- ingenui and `@ingenui/incremental-jsx-parser` are npm dependencies. Use
+  only their public entries (`ingenui`, `ingenui/react`, `ingenui/schema`,
+  `ingenui/server`, `@ingenui/incremental-jsx-parser{,/react,/core}`).
 - No `<StrictMode>`: demos hand one-shot `ReadableStream`s to the libraries.
 - Demos must render a sensible final state when `useSlideContext().mode` is
   not `"main"` (overview, presenter, print) — `useStreamPlayer` does this by

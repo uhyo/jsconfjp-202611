@@ -9,14 +9,6 @@ pale-yellow corner triangles; cyan bold for emphasis).
 
 ## Setup
 
-The demos run against **ingenui's source** (no build, no release needed), the
-same way ingenui's own `apps/demo` does. Check ingenui out where this repo can
-find it — any of:
-
-1. next to this repository: `../ingenui` (default)
-2. inside it: `vendor/ingenui` (e.g. `git submodule add https://github.com/uhyo/ingenui.git vendor/ingenui`)
-3. anywhere, with `INGENUI_DIR=/path/to/ingenui`
-
 ```sh
 pnpm install
 pnpm dev        # http://localhost:5173
@@ -24,7 +16,8 @@ pnpm build      # static site in dist/ (relative paths; host anywhere)
 pnpm typecheck
 ```
 
-(`INGENUI_DIR` only affects Vite; `tsc` looks in places 1 and 2.)
+ingenui and `@ingenui/incremental-jsx-parser` come from npm; bump them in
+`package.json` to show newer releases in the demos.
 
 ## Presenting
 

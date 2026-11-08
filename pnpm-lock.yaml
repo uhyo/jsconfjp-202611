@@ -8,12 +8,18 @@ importers:
 
   .:
     dependencies:
+      '@ingenui/incremental-jsx-parser':
+        specifier: 0.0.2
+        version: 0.0.2(react@19.2.7)
       '@json-render/core':
         specifier: 0.22.0
         version: 0.22.0(zod@4.6.7)
       '@json-render/react':
         specifier: 0.22.0
         version: 0.22.0(react@19.2.7)(zod@4.6.7)
+      ingenui:
+        specifier: 0.0.2
+        version: 0.0.2(react@19.2.7)
       react:
         specifier: 19.2.7
         version: 19.2.7
@@ -65,6 +71,15 @@ importers:
         version: 2.9.1
 
 packages:
+
+  '@ingenui/incremental-jsx-parser@0.0.2':
+    resolution: {integrity: sha512-oTMvayCiT8k7R5/h8MJD97rSQ5TNpCGBzaJYCtLDDzP7p90pN3cM4xTjoyUQcdQjCeFpq0pT45bUxVQDr+s7/w==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      react: '>=18'
+    peerDependenciesMeta:
+      react:
+        optional: true
 
   '@json-render/core@0.22.0':
     resolution: {integrity: sha512-BIfJ2V3bLYETetBu2KWoxxRPU5cSAf77dDTBgqaV54kEAfyHta1psPJgNk0fDcB3FCrnCZ5KO/X41VDkrNSYgw==}
@@ -388,6 +403,12 @@ packages:
 
   html-void-elements@3.0.0:
     resolution: {integrity: sha512-bEqo66MRXsUGxWHV5IP0PUiAWwoEjba4VCzg0LjFJBpchPaTfyfCKTG6bc5F8ucKec3q5y6qOdGyYTSBEvhCrg==}
+
+  ingenui@0.0.2:
+    resolution: {integrity: sha512-MIq4Guk+T4zcI0wJE736Hp/CB01jM6EeRZFGDb4gXYdyKnAqoY9TOm7LDrUdhbjYYzBVdjARBuXo5luYxJV61g==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      react: '>=18'
 
   inline-style-parser@0.2.7:
     resolution: {integrity: sha512-Nb2ctOyNR8DqQoR0OwRG95uNWIC0C1lCgf5Naz5H6Ji72KZ8OcFZLz2P5sNgwlyoJ8Yif11oMuYs5pBQa86csA==}
@@ -863,6 +884,10 @@ packages:
 
 snapshots:
 
+  '@ingenui/incremental-jsx-parser@0.0.2(react@19.2.7)':
+    optionalDependencies:
+      react: 19.2.7
+
   '@json-render/core@0.22.0(zod@4.6.7)':
     dependencies:
       zod: 4.6.7
@@ -1209,6 +1234,11 @@ snapshots:
       '@types/hast': 3.0.5
 
   html-void-elements@3.0.0: {}
+
+  ingenui@0.0.2(react@19.2.7):
+    dependencies:
+      '@ingenui/incremental-jsx-parser': 0.0.2(react@19.2.7)
+      react: 19.2.7
 
   inline-style-parser@0.2.7: {}
 
