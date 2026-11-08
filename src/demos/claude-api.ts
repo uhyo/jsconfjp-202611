@@ -9,9 +9,26 @@
  * - `POST /api/next`   — the next user turn, composed by the server from
  *   structured input (typed text, or a fired action's name).
  *
- * The slides' dev/preview server proxies `/api` to that app
- * (`INGENUI_DEMO_URL`, see `vite.config.ts`), so these are same-origin.
+ * In dev/preview the slides' server proxies `/api` to that app
+ * (`INGENUI_DEMO_URL`, see `vite.config.ts`); a production build calls it
+ * directly (CORS, allowed by the Worker's `ALLOWED_ORIGINS`).
  */
+
+/**
+ * The server's origin, or `""` for same-origin `/api` (the Vite proxy). A
+ * build served from localhost is `vite preview`, which proxies too — and
+ * localhost isn't an allowed origin of the Worker.
+ */
+const ORIGIN = ["localhost", "127.0.0.1", "[::1]"].includes(location.hostname)
+  ? ""
+  : __INGENUI_API_ORIGIN__;
+
+const API = `${ORIGIN}/api`;
+
+const NOT_CONFIGURED =
+  ORIGIN === ""
+    ? "Set INGENUI_DEMO_URL and restart the slides' dev server."
+    : `Check that ${ORIGIN} is up and lists this page's origin (${location.origin}) in ALLOWED_ORIGINS.`;
 
 export interface ChatMessage {
   role: "user" | "assistant";
@@ -33,18 +50,21 @@ async function errorOf(response: Response): Promise<string> {
     // Not JSON.
   }
   if (response.status === 404 || response.status === 502 || response.status === 504) {
-    return `The demo server isn't reachable (${response.status}). Set INGENUI_DEMO_URL and restart the slides' dev server.`;
+    return `The demo server isn't reachable (${response.status}). ${NOT_CONFIGURED}`;
   }
   return `${response.url} failed: ${response.status} ${text.slice(0, 200)}`;
 }
 
 export async function fetchClaudeConfig(): Promise<ClaudeConfig> {
-  const response = await fetch("/api/config");
+  // A blocked cross-origin request rejects with a bare TypeError.
+  const response = await fetch(`${API}/config`).catch(() => {
+    throw new Error(`Can't reach the demo server. ${NOT_CONFIGURED}`);
+  });
   if (!response.ok) throw new Error(await errorOf(response));
   const body = (await response.json().catch(() => null)) as { claude?: ClaudeConfig } | null;
   if (!body?.claude) {
     throw new Error(
-      "/api/config didn't answer like ingenui's demo server. Set INGENUI_DEMO_URL and restart the slides' dev server.",
+      `/api/config didn't answer like ingenui's demo server. ${NOT_CONFIGURED}`,
     );
   }
   return body.claude;
@@ -62,7 +82,7 @@ export interface NextTurnInput {
 
 /** The next user turn as the server composes it; `null` when there is nothing to send. */
 export async function fetchNextTurn(input: NextTurnInput): Promise<string | null> {
-  const response = await fetch("/api/next", {
+  const response = await fetch(`${API}/next`, {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify(input),
@@ -87,7 +107,7 @@ export function streamChat(
   let reader: ReadableStreamDefaultReader<Uint8Array> | undefined;
   return new ReadableStream<Uint8Array>({
     async start() {
-      const response = await fetch("/api/chat", {
+      const response = await fetch(`${API}/chat`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ messages, recovery: "continue" }),

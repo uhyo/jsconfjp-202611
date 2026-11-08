@@ -3,17 +3,20 @@ import { defineConfig, loadEnv } from "vite";
 
 import { slides } from "./plugins/slides.ts";
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ command, mode }) => {
   // `<ClaudeChatDemo>` talks to the server of ingenui's demo app
   // (`apps/demo` in uhyo/ingenui): the deployed Worker, or `pnpm dev` of
-  // that app. Set its origin in `.env.local` (or the shell):
+  // that app. Set its origin in `.env.local`, the shell, or CI:
   //
   //   INGENUI_DEMO_URL=https://ingenui-demo.<account>.workers.dev
   //
-  // `/api/*` is proxied there, so the browser stays same-origin (the Worker
-  // sends no CORS headers). Works in `vite dev` and `vite preview`.
+  // - `vite dev` / `vite preview`: `/api/*` is proxied there (same-origin,
+  //   so any server works — no CORS needed).
+  // - `vite build`: the URL is built in and the page calls the server
+  //   directly, which needs the page's origin in the Worker's
+  //   `ALLOWED_ORIGINS` (it lists the GitHub Pages origin).
   const env = loadEnv(mode, process.cwd(), "");
-  const target = process.env.INGENUI_DEMO_URL ?? env.INGENUI_DEMO_URL;
+  const target = (process.env.INGENUI_DEMO_URL ?? env.INGENUI_DEMO_URL)?.replace(/\/+$/, "");
   const proxy = target ? { "/api": { target, changeOrigin: true } } : undefined;
 
   return {
@@ -21,6 +24,9 @@ export default defineConfig(({ mode }) => {
     // (e.g. GitHub Pages).
     base: "./",
     plugins: [slides(), react()],
+    define: {
+      __INGENUI_API_ORIGIN__: JSON.stringify(command === "build" ? (target ?? "") : ""),
+    },
     server: { proxy },
     preview: { proxy },
   };

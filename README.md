@@ -24,9 +24,8 @@ ingenui and `@ingenui/incremental-jsx-parser` come from npm; bump them in
 `<ClaudeChatDemo />` chats with Claude through the server of ingenui's demo
 app ([`apps/demo`](https://github.com/uhyo/ingenui/tree/master/apps/demo):
 `/api/chat` streams Claude's reply through `pipeGenUi`, `/api/next` builds the
-next turn from a clicked action). The slides' dev/preview server proxies
-`/api` to it, so point it at the deployed Worker or a local `pnpm dev` of
-that app:
+next turn from a clicked action). Point the slides at the deployed Worker
+or a local `pnpm dev` of that app:
 
 ```sh
 # .env.local (gitignored), or the shell
@@ -35,12 +34,27 @@ INGENUI_DEMO_URL=https://ingenui-demo.<account>.workers.dev
 # INGENUI_DEMO_URL=http://localhost:5174
 ```
 
-The proxy exists only in `pnpm dev` / `pnpm preview`, so present from one of
-those for this slide (a static deploy of `dist/` can't reach the API — the
-Worker sends no CORS headers). The deployed Worker rate-limits chat to 6
-messages per minute per IP. The demo's schema
+In `pnpm dev` / `pnpm preview` the slides' server proxies `/api` there (so
+any server works). A production build (`pnpm build`) bakes the URL in and the
+page calls the server directly, which needs the page's origin in the
+Worker's `ALLOWED_ORIGINS` (`apps/demo/wrangler.jsonc`; it lists
+`https://uhyo.github.io`). A build opened from `localhost` still uses the
+proxy, since that's `vite preview`.
+
+The deployed Worker rate-limits chat to 6 messages per minute per IP. The
+demo's schema
 ([`ingenui-catalog.tsx`](./src/demos/ingenui-catalog.tsx)) must stay identical
 to the demo app's `genui-schema.ts`, since the server validates with that one.
+
+## Deploying (GitHub Pages)
+
+[`.github/workflows/pages.yml`](./.github/workflows/pages.yml) builds and
+publishes the deck to https://uhyo.github.io/jsconfjp-202611/ on every push to
+`master`. One-time setup in the repository settings:
+
+1. **Pages → Build and deployment → Source:** GitHub Actions.
+2. **Secrets and variables → Actions → Variables:** `INGENUI_DEMO_URL` = the
+   deployed ingenui demo server, for the live Claude slide.
 
 ## Presenting
 

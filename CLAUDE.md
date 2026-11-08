@@ -23,7 +23,9 @@ and the authoring format.
   only their public entries (`ingenui`, `ingenui/react`, `ingenui/schema`,
   `ingenui/server`, `@ingenui/incremental-jsx-parser{,/react,/core}`).
 - `ClaudeChatDemo` uses ingenui's demo app server (`/api/config`, `/api/chat`,
-  `/api/next`), proxied by Vite from `INGENUI_DEMO_URL`. Keep the schema in
+  `/api/next`) at `INGENUI_DEMO_URL`: proxied by Vite in dev/preview, called
+  directly (CORS, the Worker's `ALLOWED_ORIGINS`) from a production build
+  (`__INGENUI_API_ORIGIN__`). GitHub Pages deploy: `.github/workflows/pages.yml`. Keep the schema in
   `ingenui-catalog.tsx` identical to that app's `src/genui-schema.ts`.
 - No `<StrictMode>`: demos hand one-shot `ReadableStream`s to the libraries.
 - Demos must render a sensible final state when `useSlideContext().mode` is
