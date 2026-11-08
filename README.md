@@ -19,6 +19,29 @@ pnpm typecheck
 ingenui and `@ingenui/incremental-jsx-parser` come from npm; bump them in
 `package.json` to show newer releases in the demos.
 
+### The live Claude demo
+
+`<ClaudeChatDemo />` chats with Claude through the server of ingenui's demo
+app ([`apps/demo`](https://github.com/uhyo/ingenui/tree/master/apps/demo):
+`/api/chat` streams Claude's reply through `pipeGenUi`, `/api/next` builds the
+next turn from a clicked action). The slides' dev/preview server proxies
+`/api` to it, so point it at the deployed Worker or a local `pnpm dev` of
+that app:
+
+```sh
+# .env.local (gitignored), or the shell
+INGENUI_DEMO_URL=https://ingenui-demo.<account>.workers.dev
+# or, running ingenui's demo app locally with ANTHROPIC_API_KEY in apps/demo/.env.local:
+# INGENUI_DEMO_URL=http://localhost:5174
+```
+
+The proxy exists only in `pnpm dev` / `pnpm preview`, so present from one of
+those for this slide (a static deploy of `dist/` can't reach the API — the
+Worker sends no CORS headers). The deployed Worker rate-limits chat to 6
+messages per minute per IP. The demo's schema
+([`ingenui-catalog.tsx`](./src/demos/ingenui-catalog.tsx)) must stay identical
+to the demo app's `genui-schema.ts`, since the server validates with that one.
+
 ## Presenting
 
 | Key | |
@@ -112,6 +135,7 @@ or `import` them at the top of a slide, relative to `slides.md`).
 | `<JsonRenderDemo sample="product" />` | json-render: a SpecStream (JSONL patches) → `<Renderer>` |
 | `<CompareDemo sample="product" />` | ingenui and json-render side by side, same UI, same streaming rate |
 | `<PromptCompare />` | `formatGenUiPrompt(schema)` vs json-render's `catalog.prompt()` |
+| `<ClaudeChatDemo starters={[…]} />` | live chat with Claude via ingenui's demo server (see [above](#the-live-claude-demo)); one-click starter messages, raw reply text on the left |
 
 The demos take `sample` (from [`src/demos/samples.ts`](./src/demos/samples.ts))
 or `source` (your own text), plus `autoplay`, `speed`, `showSource={false}`.

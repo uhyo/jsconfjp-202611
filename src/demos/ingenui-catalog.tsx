@@ -2,6 +2,11 @@
  * The ingenui side of the demos: a data-only schema (what the model may
  * write — the same object a server would build the prompt from and
  * validate with) and the components bound to it.
+ *
+ * Keep the schema identical to ingenui's demo app
+ * (`apps/demo/src/genui-schema.ts` in uhyo/ingenui): `ClaudeChatDemo` talks
+ * to that app's server, which prompts Claude and validates its stream with
+ * that schema, so the client must parse with the same one.
  */
 import type { ComponentType, ReactNode } from "react";
 import { bindGenUi } from "ingenui";
@@ -25,6 +30,7 @@ export const demoSchema = defineGenUiSchema({
       props: { variant: "string", onClick: "function" },
       description: 'A button. variant: "primary" | "ghost". Wire onClick to an action.',
     },
+    Avatar: { props: { initials: "string", name: "string" }, description: "A round avatar." },
     Stat: {
       props: { label: "string", value: "node" },
       description: "A big number (value) with a caption (label).",
@@ -79,6 +85,7 @@ export const ingenuiComponents = {
   Text: ui.Text,
   Badge,
   Button,
+  Avatar: ui.Avatar,
   Stat: ui.Stat,
   Row: ui.Row,
   List: ui.List,

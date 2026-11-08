@@ -79,6 +79,14 @@ export function Button({
   );
 }
 
+export function Avatar({ initials, name }: { initials?: string; name?: string }) {
+  return (
+    <span className="ui-avatar" title={name}>
+      {initials ?? name?.slice(0, 2) ?? "?"}
+    </span>
+  );
+}
+
 export function Stat({ label, value }: { label?: ReactNode; value?: ReactNode }) {
   return (
     <div className="ui-stat">

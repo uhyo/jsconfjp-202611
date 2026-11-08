@@ -13,7 +13,7 @@ and the authoring format.
 | `plugins/slides.ts` | Vite plugin: `import slides from "./slides.md"`. One virtual module per slide (`slides.md?slide=N`, MDX + Shiki at build time; a broken slide renders its error in dev). The deck module self-accepts HMR and dispatches `slides:update`. |
 | `src/deck/` | Runtime: `Deck.tsx` (audience / `?presenter` / `?print` views), `SlideView.tsx` (1280×720 slide + scaling), `navigation.ts` (hash, keys, BroadcastChannel sync), `Overview.tsx`, `Presenter.tsx`, `deck.css` (template design + layouts). |
 | `src/components.ts` | Components usable in slides without importing. |
-| `src/demos/` | Demos. `player.ts` (controllable fake LLM stream), `ui.tsx` (shared UI kit), `ingenui-catalog.tsx` / `json-render-catalog.tsx` (adapters), `*Demo.tsx`, `samples.ts`. |
+| `src/demos/` | Demos. `player.ts` (controllable fake LLM stream), `ui.tsx` (shared UI kit), `ingenui-catalog.tsx` / `json-render-catalog.tsx` (adapters), `*Demo.tsx`, `samples.ts`, `claude-api.ts` (client for ingenui's demo server). |
 
 ## Conventions
 
@@ -22,6 +22,9 @@ and the authoring format.
 - ingenui and `@ingenui/incremental-jsx-parser` are npm dependencies. Use
   only their public entries (`ingenui`, `ingenui/react`, `ingenui/schema`,
   `ingenui/server`, `@ingenui/incremental-jsx-parser{,/react,/core}`).
+- `ClaudeChatDemo` uses ingenui's demo app server (`/api/config`, `/api/chat`,
+  `/api/next`), proxied by Vite from `INGENUI_DEMO_URL`. Keep the schema in
+  `ingenui-catalog.tsx` identical to that app's `src/genui-schema.ts`.
 - No `<StrictMode>`: demos hand one-shot `ReadableStream`s to the libraries.
 - Demos must render a sensible final state when `useSlideContext().mode` is
   not `"main"` (overview, presenter, print) — `useStreamPlayer` does this by

@@ -5,6 +5,7 @@
  */
 import type { MDXComponents } from "mdx/types";
 
+import { ClaudeChatDemo } from "./demos/ClaudeChatDemo";
 import { CompareDemo } from "./demos/CompareDemo";
 import { GenUiMessageDemo } from "./demos/GenUiMessageDemo";
 import { JsonRenderDemo } from "./demos/JsonRenderDemo";
@@ -22,4 +23,5 @@ export const mdxComponents: MDXComponents = {
   JsonRenderDemo,
   CompareDemo,
   PromptCompare,
+  ClaudeChatDemo,
 };

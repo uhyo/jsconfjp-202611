@@ -97,6 +97,19 @@ layout: demo
 <GenUiMessageDemo sample="broken" />
 
 ---
+layout: demo
+---
+
+# デモ: 本物のClaudeと会話
+
+<ClaudeChatDemo />
+
+<!--
+ingenuiのデモアプリのサーバー（INGENUI_DEMO_URL）経由でClaudeを呼ぶ。
+返信はサーバーのpipeGenUiで検証されながら流れてくる。ボタンを押すと次のリクエストになる。
+-->
+
+---
 
 # スキーマはサーバーとクライアントで共有
 
