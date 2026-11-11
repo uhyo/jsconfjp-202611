@@ -145,6 +145,7 @@ or `import` them at the top of a slide, relative to `slides.md`).
 | `<Columns ratio="2fr 1fr">` | side-by-side columns (each child is a column) |
 | `<Box tone="blue \| orange \| dark" title="…">` | a box in the template's diagram style |
 | `<JsxStreamDemo sample="product" />` | the parser alone: streamed JSX → live React tree with the `<Pending />` frontier |
+| `<JsxTreeDemo sample="product" />` | the parser alone, but the right pane shows the React element tree it returns (components, props, text, `<Pending />`) instead of rendering it; elements created anew in each snapshot are highlighted (`highlightNew={false}` to turn off), `showProviders` shows the context providers wrapping each component |
 | `<GenUiMessageDemo sample="product" />` | an ingenui message (Markdown + ```` ```ui+jsx ````), actions → next request; `sample="broken"` shows issues and the feedback report |
 | `<JsonRenderDemo sample="product" />` | json-render: a SpecStream (JSONL patches) → `<Renderer>` |
 | `<CompareDemo sample="product" />` | ingenui and json-render side by side, same UI, same streaming rate |
