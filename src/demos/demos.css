@@ -6,7 +6,7 @@
   gap: 10px;
   min-height: 0;
   height: 100%;
-  font-size: 18px;
+  font-size: 24px;
   line-height: 1.5;
 }
 
@@ -147,7 +147,7 @@
   margin: 0;
   padding: 12px 14px;
   overflow: auto;
-  font: 16px/1.5 var(--font-mono);
+  font: 20px/1.5 var(--font-mono);
   white-space: pre-wrap;
   word-break: break-all;
   color: var(--slate);
@@ -185,7 +185,7 @@
 }
 
 .demo-tree {
-  font-size: 18px;
+  font-size: 24px;
 }
 
 .demo-log {
@@ -279,7 +279,7 @@
 }
 
 .compare-col__head .muted {
-  font-size: 16px;
+  font-size: 20px;
 }
 
 .compare-col__time {
@@ -291,7 +291,7 @@
 /* ingenui message */
 
 .genui-message {
-  font-size: 18px;
+  font-size: 24px;
   line-height: 1.6;
 }
 

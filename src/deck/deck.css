@@ -90,7 +90,7 @@ body {
   background: #fff;
   font-family: var(--font-sans);
   font-weight: 500;
-  font-size: 37.33px; /* 28pt */
+  font-size: 48px; /* 36pt */
   line-height: 1.5;
   color: var(--text);
 }
@@ -129,7 +129,7 @@ body {
 .slide-error {
   margin: 0;
   padding: 16px;
-  font: 18px/1.4 var(--font-mono);
+  font: 24px/1.4 var(--font-mono);
   white-space: pre-wrap;
   color: #b91c1c;
   background: #fef2f2;
@@ -353,6 +353,7 @@ body {
   line-height: 1.2;
   margin: 0;
   padding-bottom: 6px;
+  text-wrap: balance;
 }
 
 .layout-section .slide-content > :not(h1) {
@@ -411,7 +412,7 @@ body {
 }
 
 .slide.code-sm pre.shiki {
-  font-size: 18px;
+  font-size: 24px;
 }
 
 .slide.code-xs pre.shiki {
@@ -427,6 +428,13 @@ body {
 
 .columns > * + * {
   margin-top: 0 !important;
+}
+
+.columns.columns--left-main {
+  display: grid;
+  grid-template-columns: 1fr max-content;
+  gap: 32px;
+  align-items: start;
 }
 
 .box {
