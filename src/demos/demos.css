@@ -622,3 +622,101 @@
   border: 2px solid #cbd5e1;
   border-radius: 8px;
 }
+
+/* JsxTreeDemo: the React element tree the parser returns, as JSX-like rows */
+
+.rtree {
+  font: 17px/1.55 var(--font-mono);
+  color: var(--slate);
+}
+
+.rtree-empty {
+  color: #94a3b8;
+}
+
+.rtree-row {
+  padding: 0 6px;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  animation: rtree-appear 0.35s ease-out;
+}
+
+@keyframes rtree-appear {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+}
+
+.rtree-children {
+  margin-left: 10px;
+  padding-left: 12px;
+  border-left: 2px solid #e2e8f0;
+}
+
+.rtree-punct {
+  color: #94a3b8;
+}
+
+.rtree-component {
+  font-weight: 700;
+  color: var(--orange-text);
+}
+
+.rtree-host {
+  font-weight: 700;
+  color: var(--blue-line);
+}
+
+.rtree-prop__name {
+  color: #7c3aed;
+}
+
+.rtree-string,
+.rtree-text {
+  color: #047857;
+}
+
+.rtree-expr {
+  color: var(--blue-text);
+}
+
+.rtree-badge {
+  margin-left: 8px;
+  padding: 0 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  vertical-align: 2px;
+  background: var(--orange-bg);
+  color: var(--orange-line);
+}
+
+/* Element objects created anew in this snapshot (the rest were reused). */
+.rtree-node.is-fresh > .rtree-row,
+.rtree-legend {
+  background: #fef3c7;
+  box-shadow: inset 3px 0 0 var(--orange-line);
+}
+
+.rtree-legend {
+  padding: 0 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--orange-text);
+}
+
+.rtree-node--pending > .rtree-row .rtree-component {
+  color: var(--orange-line);
+}
+
+.rtree-node--pending > .rtree-row::after {
+  content: "";
+  display: inline-block;
+  width: 0.55em;
+  height: 1.1em;
+  margin: 0 0 -0.2em 8px;
+  background: var(--orange-line);
+  animation: demo-blink 1s steps(1) infinite;
+}

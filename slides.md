@@ -280,6 +280,20 @@ layout: demo
 layout: demo
 ---
 
+# デモ: パーサーが返すReactツリー
+
+<JsxTreeDemo sample="product" />
+
+<!--
+右側はレンダリング結果ではなく、パーサーが返したReact要素ツリーそのもの。
+黄色の行はそのスナップショットで新しく作られた要素。閉じた部分木はキャッシュされて再利用されるので、
+作り直されるのは <Pending /> までの「開いている経路」だけ。
+-->
+
+---
+layout: demo
+---
+
 # デモ: ingenuiのメッセージ
 
 <GenUiMessageDemo sample="product" />

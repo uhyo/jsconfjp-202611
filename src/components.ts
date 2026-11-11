@@ -10,6 +10,7 @@ import { CompareDemo } from "./demos/CompareDemo";
 import { GenUiMessageDemo } from "./demos/GenUiMessageDemo";
 import { JsonRenderDemo } from "./demos/JsonRenderDemo";
 import { JsxStreamDemo } from "./demos/JsxStreamDemo";
+import { JsxTreeDemo } from "./demos/JsxTreeDemo";
 import { PromptCompare } from "./demos/PromptCompare";
 import { Box, Columns } from "./deck/helpers";
 
@@ -19,6 +20,7 @@ export const mdxComponents: MDXComponents = {
   Box,
   // Demos
   JsxStreamDemo,
+  JsxTreeDemo,
   GenUiMessageDemo,
   JsonRenderDemo,
   CompareDemo,
