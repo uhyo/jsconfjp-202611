@@ -132,7 +132,7 @@ class: code-xs
 
 # UIのストリーミングの問題
 
-<div class="columns columns--left-main">
+<div className="columns columns--left-main">
 
 <div>
 UI定義は、ただのテキストとは<br />異なり、**構造を持つ**。
@@ -261,22 +261,6 @@ JSXなら、文字数効率がよく、UIの表現方法としてAIも書き慣�
 中途半端なJSXをパースし、コンポーネントツリーとしてレンダリングする仕組みが必要。
 
 ---
-
-TODO: ここまで書いた（残りはAI生成の初期コンテンツで未編集）
-
----
-layout: demo
----
-
-# デモ: JSXのインクリメンタルパース
-
-<JsxStreamDemo sample="product" />
-
-<!--
-▶で開始、↺で最初から、⏭で最後まで。速度も変えられます。
--->
-
----
 layout: demo
 ---
 
@@ -284,11 +268,13 @@ layout: demo
 
 <JsxTreeDemo sample="product" />
 
-<!--
-右側はレンダリング結果ではなく、パーサーが返したReact要素ツリーそのもの。
-黄色の行はそのスナップショットで新しく作られた要素。閉じた部分木はキャッシュされて再利用されるので、
-作り直されるのは <Pending /> までの「開いている経路」だけ。
--->
+---
+
+# JSXパーサーの挙動
+
+途中までの入力でも、そこまでのパース結果を出力できる。
+
+
 
 ---
 layout: demo
