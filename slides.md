@@ -272,9 +272,31 @@ layout: demo
 
 # JSXパーサーの挙動
 
-途中までの入力でも、そこまでのパース結果を出力できる。
+途中までの入力でも、そこまでのパース結果を<br />出力できる。
 
+<div>
+  <img src="./screenshot3.png" width="700" />
+</div>
 
+---
+
+# JSXパーサーの挙動
+
+コンポーネントツリーへの変換時、パース途中の箇所に`<Pending />`を配置。
+
+<div>
+  <img src="./screenshot3.png" width="700" />
+</div>
+
+---
+
+# JSXパーサーの挙動
+
+ノードはイミュータブルで、変更があった<br />箇所のみ作り直し。
+
+<div>
+  <img src="./screenshot3.png" width="700" />
+</div>
 
 ---
 layout: demo
