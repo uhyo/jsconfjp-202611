@@ -707,6 +707,12 @@
   color: var(--orange-text);
 }
 
+/* <Pending /> remounts whenever the frontier moves; don't replay the
+   appear animation each time (it flickers). */
+.rtree-node--pending > .rtree-row {
+  animation: none;
+}
+
 .rtree-node--pending > .rtree-row .rtree-component {
   color: var(--orange-line);
 }
