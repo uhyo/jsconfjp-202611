@@ -5,7 +5,7 @@
  * (`json-render-catalog.tsx`) are thin adapters over these.
  */
 import { createContext, useContext } from "react";
-import type { ReactNode } from "react";
+import type { FormEvent, ReactNode } from "react";
 
 export type Tone = "neutral" | "info" | "success" | "warning";
 
@@ -110,4 +110,70 @@ export function Item({ children }: Children) {
 
 export function Callout({ tone = "info", children }: Children & { tone?: string }) {
   return <div className={`ui-callout ui-callout--${tone}`}>{children}</div>;
+}
+
+export function Form({
+  submitLabel = "送信",
+  pending = false,
+  onSubmit,
+  children,
+}: Children & {
+  submitLabel?: string | undefined;
+  pending?: boolean;
+  onSubmit?: ((event: FormEvent<HTMLFormElement>) => void) | undefined;
+}) {
+  return (
+    <form
+      className="ui-form"
+      onSubmit={(event) => {
+        event.preventDefault();
+        if (!pending) onSubmit?.(event);
+      }}
+    >
+      {children}
+      <button className="ui-button ui-button--primary" type="submit" disabled={pending} aria-busy={pending}>
+        {submitLabel}
+      </button>
+    </form>
+  );
+}
+
+export function TextField({
+  name,
+  label,
+  placeholder,
+  defaultValue,
+  multiline = false,
+  required = false,
+}: {
+  name?: string;
+  label?: string;
+  placeholder?: string;
+  defaultValue?: string;
+  multiline?: boolean;
+  required?: boolean;
+}) {
+  const props = { className: "ui-field__control", name, placeholder, defaultValue, required };
+  return (
+    <label className="ui-field">
+      <span className="ui-field__label">{label}</span>
+      {multiline ? <textarea rows={3} {...props} /> : <input type="text" {...props} />}
+    </label>
+  );
+}
+
+export function Select({ name, label, defaultValue, children }: Children & { name?: string; label?: string; defaultValue?: string }) {
+  return (
+    <label className="ui-field">
+      <span className="ui-field__label">{label}</span>
+      <select className="ui-field__control" name={name} defaultValue={defaultValue}>
+        {/* No shimmer inside a <select>: only <option>s are valid there. */}
+        <HidePendingContext value>{children}</HidePendingContext>
+      </select>
+    </label>
+  );
+}
+
+export function Option({ value, children }: Children & { value?: string }) {
+  return <option value={value}>{children}</option>;
 }

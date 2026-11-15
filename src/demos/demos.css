@@ -437,6 +437,38 @@
   cursor: default;
 }
 
+.ui-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ui-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ui-field__label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.ui-field__control {
+  font: 17px/1.4 var(--font-sans);
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 2px solid #e2e8f0;
+  background: #fff;
+  color: inherit;
+}
+
+.ui-field__control:focus {
+  outline: none;
+  border-color: var(--blue-line);
+}
+
 .ui-avatar {
   display: inline-flex;
   align-items: center;

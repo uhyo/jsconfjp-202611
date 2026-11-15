@@ -7,7 +7,8 @@
  *   `pipeGenUi` (validated on the way; on a broken UI block the server stops
  *   Claude and asks it to continue the same message);
  * - `POST /api/next`   — the next user turn, composed by the server from
- *   structured input (typed text, or a fired action's name).
+ *   structured input (typed text, or a fired action's name and the values
+ *   the user entered).
  *
  * In dev/preview the slides' server proxies `/api` to that app
  * (`INGENUI_DEMO_URL`, see `vite.config.ts`); a production build calls it
@@ -70,12 +71,17 @@ export async function fetchClaudeConfig(): Promise<ClaudeConfig> {
   return body.claude;
 }
 
+/** An action's reported values, by field name (a repeated name lists them all). */
+export type ActionData = Readonly<Record<string, string | readonly string[]>>;
+
 export interface NextTurnInput {
   /** The previous assistant message, as streamed (`""` before the first). */
   message: string;
   text?: string;
   /** A fired action's name (`ActionEvent.name`). */
   action?: string;
+  /** The values it reported: what the user entered in a form. */
+  data?: ActionData;
   /** Render crashes — the one kind of issue only the client can observe. */
   renderErrors?: { blockIndex: number; message: string }[];
 }
