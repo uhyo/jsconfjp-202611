@@ -299,6 +299,29 @@ layout: demo
 </div>
 
 ---
+
+# 前半のまとめ
+
+- AIに**JSXを出力**してもらうことで、効率がよく、AIも書き慣れている形式でUIを生成できる
+- **インクリメンタルJSXパーサー**を実装することで、この方式を実現できた
+
+---
+layout: section
+---
+
+# JSXパーサーを取り巻く<br />フレームワーク
+
+---
+layout: center
+---
+
+<img src="./ingenui-hero.png" />
+
+---
+
+# フレームワークの役割
+
+---
 layout: demo
 ---
 
