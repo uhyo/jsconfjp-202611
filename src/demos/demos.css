@@ -295,6 +295,10 @@
   line-height: 1.6;
 }
 
+.claude-turns .genui-message {
+  font-size: 24pt;
+}
+
 .genui-message > * + * {
   margin-top: 10px;
 }

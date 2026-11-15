@@ -255,6 +255,15 @@ JSXなら、文字数効率がよく、UIの表現方法としてAIも書き慣�
 </div>
 
 ---
+layout: demo
+---
+
+# デモ: 同じUIを並べてストリーミング
+
+<CompareDemo sample="product" />
+
+
+---
 
 # 必要なもの
 
@@ -321,13 +330,67 @@ layout: center
 
 # フレームワークの役割
 
+- Markdownのレンダリングとその中の<br />**ui+jsx**ブロックのサポート
+- 会話サイクルの制御<small>（インタラクション・エラー処理）</small>
+- プロンプト類の提供
+
+---
+layout: center
+---
+
+<img src="./ingenui-overview-light.svg" />
+
+---
+
+# サーバーの役割
+
+LLMから送られてきたストリームを、**検証**しつつ、クライアントに流す。
+
+**検証:** 構文エラーやスキーマ違反などをチェック。
+
+問題があれば、サーバーからLLMにフィードバックして会話を継続する。
+
+---
+
+# 構成要素: 共有スキーマ
+
+コンポーネント定義の名前やpropsなど。
+
+- プロンプトに含まれ、AIにコンポーネントを<br />認識させる
+- サーバーでのエラー処理にも使用される
+
+---
+
+# 構成要素: JSXパーサー
+
+- クライアント側: Reactコンポーネントツリーに変換し、描画
+- サーバー側: ストリームの検証だけ行う
+
+---
+
+# インタラクション
+
+ボタンなどに `onClick={actions.buy}` のように<br />**アクション**が設定されている。
+
+ユーザーが操作すると、どのアクションが呼ばれたのかがLLMに通知され、会話が継続。
+
 ---
 layout: demo
 ---
 
-# デモ: ingenuiのメッセージ
+# デモ: ingenuiのメッセージ（再掲）
 
 <GenUiMessageDemo sample="product" />
+
+---
+
+# エラーリカバリー
+
+JSX部分に問題があった場合、フレームワークがエラーメッセージを生成。
+
+それをLLMに送ることでリトライする。
+
+クライアント側ではError Boundaryによりエラー表示となり、AIが自主的に修正したように見える。
 
 ---
 layout: demo
@@ -351,102 +414,57 @@ ingenuiのデモアプリのサーバー（INGENUI_DEMO_URL）経由でClaudeを
 -->
 
 ---
+layout: section
+---
 
-# スキーマはサーバーとクライアントで共有
+# FAQ
 
-<Columns>
-<div>
+---
 
-```ts
-// サーバー
-const pipe = pipeGenUi(
-  modelStream,
-  schema, // [!code highlight]
-  { onIssue },
-);
-return new Response(pipe.stream);
-```
+# AIが&lt;script&gt;とかを出力してしまう危険はないの？
 
-</div>
-<div>
+**A.** AIが出力するのはあくまでJSXであり、生のHTMLではありません。
 
-```tsx
-// クライアント
-const genUi = bindGenUi(schema, { // [!code highlight]
-  components: { Card, Button },
-});
-const { node } = useGenUiMessage(
-  stream,
-  genUi,
-);
-```
+あらかじめこちらで定義したコンポーネントのみがレンダリングされるため、予期せずスクリプトが実行されることはありません。
 
-</div>
-</Columns>
+---
 
-サーバー側でも**同じ検証**をストリームの途中で行える。
+# これはReact専用なの？
 
-<!--
-コードブロックでは `// [!code highlight]` で行をハイライトできる（focus / ++ / -- も可）。
--->
+**A.** ingenuiはReact専用ですが、アイデア自体は<br />どこでも応用可能です。
+
+JSXはあくまで構文なので、それをパースして、<br />お使いの言語/ライブラリのコンポーネントに変換する仕組みを作れば応用可能です。
 
 ---
 layout: section
 ---
 
-# json-renderとの比較
+# まとめ:<br />このトークで学んだこと
 
 ---
 
-# json-render
+# まとめ: AIにJSXを書かせるアイデア
 
-UIを**JSONのspec**で表現する。ストリーミング時はJSON Patch（JSONL）。
-
-```jsonl
-{"op":"add","path":"/root","value":"card"}
-{"op":"add","path":"/elements/card","value":{"type":"Card","props":{},"children":["title","button"]}}
-{"op":"add","path":"/elements/title","value":{"type":"Title","props":{"text":"Aurora"},"children":[]}}
-```
-
-<Box tone="orange" title="ポイント">1行（パッチ1つ）が届くまでUIに反映されない</Box>
-
----
-layout: demo
----
-
-# デモ: 同じUIを並べてストリーミング
-
-<CompareDemo sample="product" />
-
----
-layout: demo
----
-
-# デモ: json-render単体
-
-<JsonRenderDemo sample="product" />
-
----
-layout: demo
----
-
-# モデルへのプロンプト
-
-<PromptCompare />
+- JSONとかよりも文字列効率がいい
+- AIもUIの表現方法として慣れているはず
+- 既存技術の寄せ集めではなく、<br />インクリメンタルJSXパーサーが必要
 
 ---
 
-# まとめ
+# まとめ: Generative UIフレームワークの概観
 
-- LLMは**JSXが得意**。わざわざJSONで書かせる必要はない
-- ingenuiは**ストリーミング中のJSX**をそのままReactツリーにする
-- スキーマを共有して、**サーバーでもクライアントでも同じ検証**
+- ワイヤーフォーマットの整備
+  - `ui+jsx`ブロック（ingenuiの場合）
+  - プロンプト類の提供
+- 会話サイクルの制御
+  - アクションによる返答
+  - サーバーでの割り込みエラー処理
 
 ---
-layout: center
-pageNumber: false
----
 
-# ありがとうございました
+# まとめ: みなさんができること
 
-https://github.com/uhyo/ingenui
+- ingenuiでGenerative UIを実践してもいい
+  - https://github.com/uhyo/ingenui
+- JSXというアイデアを活かして独自のGenerative UIフレームワークを作ってもいい
+- AI時代の良いUXについて考えたい

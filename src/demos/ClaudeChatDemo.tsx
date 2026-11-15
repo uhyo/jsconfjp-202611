@@ -18,7 +18,7 @@ import { Shimmer } from "./ui";
 const DEFAULT_STARTERS = [
   "2万円以下のワイヤレスイヤホンを3つ比較して",
   "一人暮らし向けのエスプレッソマシンを探しています",
-  "出張用の軽いノートPCを選ぶのを手伝って",
+  "JSConf JPに着ていくTシャツを探しています",
 ];
 
 export interface ClaudeChatDemoProps {

@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="'Noto Sans JP','Noto Sans CJK JP','Hiragino Sans',sans-serif">
+  <defs>
+    <linearGradient id="brand" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8b5cf6"/>
+      <stop offset="1" stop-color="#06b6d4"/>
+    </linearGradient>
+    <linearGradient id="brandH" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#8b5cf6"/>
+      <stop offset="1" stop-color="#06b6d4"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-40%" width="160%" height="180%">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#3a3f55"/>
+    </marker>
+    <marker id="arrErr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#d97706"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="900" fill="#ffffff"/>
+
+  <!-- Panels -->
+  <rect x="250" y="70" width="545" height="760" rx="28" fill="#f5f6fb" stroke="#dde1ee" stroke-width="2"/>
+  <rect x="805" y="70" width="545" height="760" rx="28" fill="#f5f6fb" stroke="#dde1ee" stroke-width="2"/>
+  <text x="522" y="130" text-anchor="middle" font-size="36" font-weight="700" fill="#7c3aed">Server</text>
+  <text x="1078" y="130" text-anchor="middle" font-size="36" font-weight="700" fill="#0891b2">Client</text>
+
+  <!-- Shared schema band -->
+  <rect x="330" y="728" width="940" height="64" rx="32" fill="#eceef6" stroke="#b4bad0" stroke-width="2" stroke-dasharray="8 6"/>
+  <text x="800" y="771" text-anchor="middle" font-size="28" font-weight="700" fill="#3d4360">共有スキーマ</text>
+
+  <!-- Parser (core) -->
+  <rect x="590" y="360" width="420" height="150" rx="26" fill="url(#brand)" opacity="0.22" filter="url(#glow)"/>
+  <rect x="590" y="360" width="420" height="150" rx="26" fill="#ffffff" stroke="url(#brand)" stroke-width="5"/>
+  <text x="800" y="418" text-anchor="middle" font-size="28" font-weight="600" fill="#7c3aed">Incremental</text>
+  <text x="800" y="474" text-anchor="middle" font-size="50" font-weight="800" fill="url(#brandH)">JSX Parser</text>
+
+  <!-- Parser usage connectors -->
+  <path d="M560,292 L640,358" stroke="#9aa0b8" stroke-width="3" stroke-dasharray="7 7" fill="none"/>
+  <path d="M1040,292 L960,358" stroke="#9aa0b8" stroke-width="3" stroke-dasharray="7 7" fill="none"/>
+
+  <!-- Error feedback -->
+  <path d="M640,512 L566,580" stroke="#d97706" stroke-width="4" fill="none" marker-end="url(#arrErr)"/>
+  <text x="626" y="576" font-size="32" font-weight="700" fill="#d97706">エラー</text>
+
+  <!-- Role boxes -->
+  <g>
+    <rect x="330" y="180" width="300" height="110" rx="18" fill="#ffffff" stroke="#8b5cf6" stroke-width="2.5"/>
+    <text x="480" y="232" text-anchor="middle" font-size="32" font-weight="700" fill="#1a1d2e">ストリーム検証</text>
+    <text x="480" y="270" text-anchor="middle" font-size="21" font-family="'DejaVu Sans Mono',monospace" fill="#6b7190">pipeGenUi</text>
+  </g>
+  <g>
+    <rect x="330" y="590" width="300" height="110" rx="18" fill="#ffffff" stroke="#8b5cf6" stroke-width="2.5"/>
+    <text x="480" y="642" text-anchor="middle" font-size="32" font-weight="700" fill="#1a1d2e">プロンプト生成</text>
+    <text x="480" y="680" text-anchor="middle" font-size="21" font-family="'DejaVu Sans Mono',monospace" fill="#6b7190">formatGenUiPrompt</text>
+  </g>
+  <g>
+    <rect x="970" y="180" width="300" height="110" rx="18" fill="#ffffff" stroke="#06b6d4" stroke-width="2.5"/>
+    <text x="1120" y="232" text-anchor="middle" font-size="32" font-weight="700" fill="#1a1d2e">ライブ描画</text>
+    <text x="1120" y="270" text-anchor="middle" font-size="21" font-family="'DejaVu Sans Mono',monospace" fill="#6b7190">useGenUiMessage</text>
+  </g>
+  <g>
+    <rect x="970" y="590" width="300" height="110" rx="18" fill="#ffffff" stroke="#06b6d4" stroke-width="2.5"/>
+    <text x="1120" y="642" text-anchor="middle" font-size="32" font-weight="700" fill="#1a1d2e">アクション</text>
+    <text x="1120" y="680" text-anchor="middle" font-size="21" font-family="'DejaVu Sans Mono',monospace" fill="#6b7190">onAction</text>
+  </g>
+
+  <!-- LLM -->
+  <rect x="40" y="365" width="150" height="140" rx="24" fill="#1a1d2e"/>
+  <text x="115" y="450" text-anchor="middle" font-size="40" font-weight="800" fill="#ffffff">LLM</text>
+
+  <!-- User -->
+  <g fill="#1a1d2e">
+    <circle cx="1485" cy="395" r="28"/>
+    <path d="M1435,478 C1435,440 1458,428 1485,428 C1512,428 1535,440 1535,478 Z"/>
+  </g>
+  <text x="1485" y="522" text-anchor="middle" font-size="28" font-weight="700" fill="#1a1d2e">ユーザー</text>
+
+  <!-- Conversation loop (clockwise) -->
+  <g stroke="#3a3f55" stroke-width="4.5" fill="none" marker-end="url(#arr)" stroke-linecap="round">
+    <path d="M115,362 C115,262 200,235 322,235"/>
+    <path d="M632,235 L962,235"/>
+    <path d="M1272,235 C1400,235 1485,268 1485,352"/>
+    <path d="M1485,540 C1485,610 1400,645 1278,645"/>
+    <path d="M968,645 L638,645"/>
+    <path d="M328,645 C200,645 115,610 115,512"/>
+  </g>
+
+  <!-- Loop labels -->
+  <text x="160" y="176" text-anchor="middle" font-size="30" font-weight="700" fill="#3a3f55">Markdown</text>
+  <text x="160" y="213" text-anchor="middle" font-size="30" font-weight="700" fill="#3a3f55">+ JSX</text>
+
+  <rect x="710" y="184" width="180" height="42" rx="6" fill="#ffffff"/>
+  <text x="800" y="217" text-anchor="middle" font-size="32" font-weight="700" fill="#3a3f55">ストリーム</text>
+
+  <rect x="684" y="594" width="232" height="42" rx="6" fill="#ffffff"/>
+  <text x="800" y="626" text-anchor="middle" font-size="30" font-family="'DejaVu Sans Mono',monospace" font-weight="700" fill="#3a3f55">actions.xxx</text>
+
+  <text x="135" y="704" text-anchor="middle" font-size="32" font-weight="700" fill="#3a3f55">次の</text>
+  <text x="135" y="744" text-anchor="middle" font-size="32" font-weight="700" fill="#3a3f55">リクエスト</text>
+
+  <text x="1468" y="666" text-anchor="middle" font-size="32" font-weight="700" fill="#3a3f55">操作</text>
+</svg>
