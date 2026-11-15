@@ -46,16 +46,6 @@ demo's schema
 ([`ingenui-catalog.tsx`](./src/demos/ingenui-catalog.tsx)) must stay identical
 to the demo app's `genui-schema.ts`, since the server validates with that one.
 
-## Deploying (GitHub Pages)
-
-[`.github/workflows/pages.yml`](./.github/workflows/pages.yml) builds and
-publishes the deck to https://uhyo.github.io/jsconfjp-202611/ on every push to
-`master`. One-time setup in the repository settings:
-
-1. **Pages → Build and deployment → Source:** GitHub Actions.
-2. **Secrets and variables → Actions → Variables:** `INGENUI_DEMO_URL` = the
-   deployed ingenui demo server, for the live Claude slide.
-
 ## Presenting
 
 | Key | |
