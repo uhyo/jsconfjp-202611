@@ -1,16 +1,23 @@
 /**
  * The real thing: chat with Claude through ingenui's demo server. Replies
  * stream through the server's `pipeGenUi` into `useGenUiMessage`; clicking
- * a button wired to `actions.*` asks the server for the next turn
- * (`/api/next`) and sends it. The left pane shows the raw text of the latest
+ * a button (or a form's submit) wired to `actions.*` asks the server for
+ * the next turn (`/api/next`) and sends it, with what the user entered. The left pane shows the raw text of the latest
  * reply as it arrives.
  */
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import type { GenUiIssue, UiBlockWrapperProps } from "ingenui";
+import type { ActionEvent, GenUiIssue, UiBlockWrapperProps } from "ingenui";
 import { useGenUiMessage } from "ingenui/react";
 
 import { useSlideContext } from "../deck/context";
-import { fetchClaudeConfig, fetchNextTurn, streamChat, type ChatMessage, type ClaudeConfig } from "./claude-api";
+import {
+  fetchClaudeConfig,
+  fetchNextTurn,
+  streamChat,
+  type ActionData,
+  type ChatMessage,
+  type ClaudeConfig,
+} from "./claude-api";
 import { Pane } from "./DemoParts";
 import { genUi } from "./ingenui-catalog";
 import { Shimmer } from "./ui";
@@ -39,6 +46,35 @@ interface Reply {
   renderErrors: RenderError[];
 }
 
+/** A fired action, as sent to the server: its name and the values it reported. */
+type ActionRequest = { action: string; data?: ActionData };
+type ChatRequest = { text: string } | ActionRequest;
+
+/**
+ * What the user entered, when the action was called with a form's submit
+ * event (the `Form` component passes it on): every field by name, plus the
+ * submitter. The server normalizes these (untrusted) values into the
+ * message it writes.
+ */
+function actionData({ args }: ActionEvent): ActionData | undefined {
+  const event = args[0] as { target?: unknown; nativeEvent?: { submitter?: unknown } } | undefined;
+  if (!(event?.target instanceof HTMLFormElement)) return undefined;
+  const submitter = event.nativeEvent?.submitter;
+  const form = new FormData(event.target, submitter instanceof HTMLElement ? submitter : null);
+  const data: Record<string, string[]> = {};
+  for (const [key, value] of form) {
+    if (typeof value === "string") (data[key] ??= []).push(value);
+  }
+  return Object.fromEntries(Object.entries(data).map(([key, values]) => [key, values.length === 1 ? values[0]! : values]));
+}
+
+/** How a fired action shows in the chat. */
+function actionLabel({ action, data }: ActionRequest): string {
+  if (data === undefined) return `actions.${action} をクリック`;
+  const values = Object.entries(data).map(([key, value]) => `${key}: ${typeof value === "string" ? value : value.join(", ")}`);
+  return `actions.${action} を送信（${values.join(" / ")}）`;
+}
+
 export function ClaudeChatDemo(props: ClaudeChatDemoProps) {
   const { mode } = useSlideContext();
   // Thumbnails and print: no network, no API spend.
@@ -62,7 +98,7 @@ function ClaudeChat({ starters = DEFAULT_STARTERS, showSource = true }: ClaudeCh
   const replies = useRef(new Map<number, Reply>());
   const nextId = useRef(0);
   const busyRef = useRef(false);
-  const sendRef = useRef<(request: { text: string } | { action: string }) => Promise<void>>(async () => {});
+  const sendRef = useRef<(request: ChatRequest) => Promise<void>>(async () => {});
 
   useEffect(() => {
     fetchClaudeConfig().then(setConfig, (err: unknown) => setError(err instanceof Error ? err.message : String(err)));
@@ -83,7 +119,7 @@ function ClaudeChat({ starters = DEFAULT_STARTERS, showSource = true }: ClaudeCh
     return messages;
   };
 
-  const send = async (request: { text: string } | { action: string }) => {
+  const send = async (request: ChatRequest) => {
     if (busyRef.current) return;
     setBusyBoth(true);
     setError(null);
@@ -91,7 +127,8 @@ function ClaudeChat({ starters = DEFAULT_STARTERS, showSource = true }: ClaudeCh
     const reply = last ? replies.current.get(last.id) : undefined;
     try {
       // The server composes the turn: the typed text or the action's
-      // canonical message, plus feedback on the previous reply.
+      // canonical message (with the values entered), plus feedback on the
+      // previous reply.
       const content = await fetchNextTurn({
         message: reply?.text ?? "",
         ...request,
@@ -101,7 +138,7 @@ function ClaudeChat({ starters = DEFAULT_STARTERS, showSource = true }: ClaudeCh
         setBusyBoth(false);
         return;
       }
-      const label = "text" in request ? request.text : `actions.${request.action} をクリック`;
+      const label = "text" in request ? request.text : actionLabel(request);
       const history = [...conversation(), { role: "user" as const, content }];
       setTurns((prev) => [
         ...prev,
@@ -181,7 +218,7 @@ function ClaudeChat({ starters = DEFAULT_STARTERS, showSource = true }: ClaudeCh
                   key={turn.id}
                   history={turn.history}
                   onProgress={(text, done) => setLatest({ text, done })}
-                  onAction={(name) => void sendRef.current({ action: name })}
+                  onAction={(action) => void sendRef.current(action)}
                   onSettled={(reply) => {
                     replies.current.set(turn.id, reply);
                     setBusyBoth(false);
@@ -256,7 +293,7 @@ function AssistantReply({
 }: {
   history: ChatMessage[];
   onProgress(text: string, done: boolean): void;
-  onAction(name: string): void;
+  onAction(action: ActionRequest): void;
   onSettled(reply: Reply): void;
 }) {
   const textRef = useRef("");
@@ -279,7 +316,12 @@ function AssistantReply({
     ...genUi,
     Pending: Shimmer,
     wrapUiBlock: UiBlockFrame,
-    onAction: (event) => onAction(event.name),
+    // Only the name and the entered values go to the server, which writes
+    // the message itself. Read the form now: the event is the live one.
+    onAction: (event) => {
+      const data = actionData(event);
+      onAction({ action: event.name, ...(data !== undefined && { data }) });
+    },
     onIssue: (issue) => {
       if (issue.kind === "render-error") {
         renderErrors.current.push({
