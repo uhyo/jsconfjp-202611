@@ -3,6 +3,8 @@
  * from `experiments/results/summary.json` so the slides always show the
  * committed data. Regenerate with `pnpm exp:report`.
  *
+ * - `actual-ui`: UI tokens of the actual successful responses of each
+ *   format, per task (each format's own output for the same request).
  * - `same-ui`: tokens of one UI written as JSX vs as a SpecStream, per task
  *   (every valid ui+jsx block from the runs, converted).
  * - `per-request`: what one request costs in each format (input prompt,
@@ -37,12 +39,13 @@ const CONDITION_LABELS: Record<string, string> = {
 const fmt = (n: number) => Math.round(n).toLocaleString("en-US");
 
 export interface ExperimentResultsProps {
-  view: "same-ui" | "per-request" | "success";
+  view: "actual-ui" | "same-ui" | "per-request" | "success";
   /** For `per-request`: a condition id (default `haiku-low`). */
   condition?: string;
 }
 
 export function ExperimentResults({ view, condition = "haiku-low" }: ExperimentResultsProps) {
+  if (view === "actual-ui") return <ActualUi />;
   if (view === "same-ui") return <SameUi />;
   if (view === "per-request") return <PerRequest condition={condition} />;
   return <Success />;
@@ -71,28 +74,56 @@ function Bar({ format, value, max, label }: { format: Format; value: number; max
   );
 }
 
-function SameUi() {
-  const rows = Object.entries(summary.sameUi.byTask).filter(([, v]) => v.blocks > 0);
-  const max = Math.max(...rows.map(([, v]) => v.spec));
+/** Per-task pairs of bars (ingenui, json-render) on one shared scale. */
+function TaskBars({ rows, note }: { rows: [task: string, jsx: number, spec: number][]; note: ReactNode }) {
+  const max = Math.max(...rows.map(([, , spec]) => spec));
   return (
     <div className="exp">
       <Legend />
       <div className="exp-groups">
-        {rows.map(([task, v]) => (
+        {rows.map(([task, jsx, spec]) => (
           <div key={task} className="exp-group">
             <div className="exp-group__label">{TASK_LABELS[task] ?? task}</div>
             <div className="exp-group__bars">
-              <Bar format="ingenui" value={v.jsx} max={max} label={`${fmt(v.jsx)} tokens`} />
-              <Bar format="json-render" value={v.spec} max={max} label={`${fmt(v.spec)} tokens（×${(v.spec / v.jsx).toFixed(1)}）`} />
+              <Bar format="ingenui" value={jsx} max={max} label={`${fmt(jsx)} tokens`} />
+              <Bar format="json-render" value={spec} max={max} label={`${fmt(spec)} tokens（×${(spec / jsx).toFixed(1)}）`} />
             </div>
           </div>
         ))}
       </div>
-      <div className="exp-note">
-        実際の出力 {summary.sameUi.blocks} ブロックを同じ画面のSpecStreamに変換して比較（平均トークン数）。合計で
-        <strong> ×{summary.sameUi.ratio.toFixed(2)}</strong>
-      </div>
+      <div className="exp-note">{note}</div>
     </div>
+  );
+}
+
+function ActualUi() {
+  const { actualUi } = summary;
+  return (
+    <TaskBars
+      rows={Object.entries(actualUi.byTask).map(([task, v]) => [task, v.ingenui, v["json-render"]])}
+      note={
+        <>
+          成功した実際の応答（ingenui {actualUi.responses.ingenui}件、json-render {actualUi.responses["json-render"]}
+          件）のUI部分の平均トークン数。全体で<strong> ×{actualUi.ratio.toFixed(2)}</strong>
+        </>
+      }
+    />
+  );
+}
+
+function SameUi() {
+  return (
+    <TaskBars
+      rows={Object.entries(summary.sameUi.byTask)
+        .filter(([, v]) => v.blocks > 0)
+        .map(([task, v]) => [task, v.jsx, v.spec])}
+      note={
+        <>
+          実際の出力 {summary.sameUi.blocks} ブロックを同じ画面のSpecStreamに変換して比較（平均トークン数）。合計で
+          <strong> ×{summary.sameUi.ratio.toFixed(2)}</strong>
+        </>
+      }
+    />
   );
 }
 

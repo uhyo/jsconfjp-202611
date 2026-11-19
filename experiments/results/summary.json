@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-19T01:10:11.256Z",
+  "generatedAt": "2026-11-19T01:38:59.729Z",
   "tokenModel": "claude-haiku-5-5",
   "runs": 800,
   "staticTokens": {
@@ -69,6 +69,51 @@
         "blocks": 50,
         "jsx": 339.38,
         "spec": 929.72
+      }
+    }
+  },
+  "actualUi": {
+    "responses": {
+      "ingenui": 393,
+      "json-render": 395
+    },
+    "mean": {
+      "ingenui": 351.0941475826972,
+      "json-render": 968.6177215189873
+    },
+    "ratio": 2.7588546496373536,
+    "byTask": {
+      "product": {
+        "ingenui": 250.22,
+        "json-render": 711.78
+      },
+      "dashboard": {
+        "ingenui": 285.34090909090907,
+        "json-render": 880.92
+      },
+      "profile": {
+        "ingenui": 235.98,
+        "json-render": 718.2
+      },
+      "order": {
+        "ingenui": 248.16,
+        "json-render": 788.0625
+      },
+      "weather": {
+        "ingenui": 397.08,
+        "json-render": 1196.38
+      },
+      "plans": {
+        "ingenui": 548.02,
+        "json-render": 1694.469387755102
+      },
+      "team": {
+        "ingenui": 495.9,
+        "json-render": 749.3333333333334
+      },
+      "incident": {
+        "ingenui": 339.9387755102041,
+        "json-render": 1008.32
       }
     }
   },
