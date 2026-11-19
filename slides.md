@@ -302,13 +302,15 @@ layout: demo
 layout: demo
 ---
 
-# 結果: 同じUIのトークン数
+# 結果: UIのトークン数
 
-<ExperimentResults view="same-ui" />
+<ExperimentResults view="actual-ui" />
 
 <!--
-- ingenuiの実際の出力（valid な ui+jsx ブロック）を、同じ画面を描くSpecStreamに機械的に変換して数えた
-- 同じUIで、JSONパッチ列はJSXの約2.8倍のトークン
+- 同じ依頼に対する、それぞれの形式の実際の応答（成功したもの）のUI部分を数えた
+- 平均で json-render は ingenui の約2.8倍のトークン
+- メンバー一覧だけ差が小さい（×1.5）: json-render は repeat + state で「1人分のテンプレート + データ配列」と書けるため。JSXにはループがないので5人分を書き下す。json-render の応答の約3分の1が state を使っていた
+- 「完全に同じUI」でも比べた: ingenuiの出力を同じ画面を描くSpecStreamに機械的に変換すると ×2.8（実際の応答との差は、変換のキーが短いことと、repeat を使わないこと）
 - トークン数は count_tokens API（Haiku 5.5 のトークナイザ）
 -->
 

@@ -96,6 +96,29 @@ const sameUiSummary = {
   ),
 };
 
+// 2b. Actual vs actual: the UI part of every successful response, per format
+// (each format's own output for the same request — what you really pay,
+// including json-render's repeat/state shortcuts).
+const actualTokens = (format: Format, task?: string) =>
+  runs
+    .filter((r) => r.format === format && r.grade.success && (task === undefined || r.task === task))
+    .map((r) => tok(r.grade.uiText))
+    .filter((x): x is number => x !== undefined);
+const actualUi = {
+  responses: Object.fromEntries(FORMATS.map((f) => [f, actualTokens(f).length])),
+  mean: Object.fromEntries(FORMATS.map((f) => [f, mean(actualTokens(f))])),
+  ratio: mean(actualTokens("json-render")) / mean(actualTokens("ingenui")),
+  byTask: Object.fromEntries(
+    tasks.map((t) => [
+      t.id,
+      {
+        ingenui: mean(actualTokens("ingenui", t.id)),
+        "json-render": mean(actualTokens("json-render", t.id)),
+      },
+    ]),
+  ),
+};
+
 // 3. Generation: success rate, tokens, latency, cost per condition × format
 interface Cell {
   condition: string;
@@ -181,6 +204,7 @@ const summary = {
   runs: runs.length,
   staticTokens,
   sameUi: sameUiSummary,
+  actualUi,
   cells,
   perTask,
 };
@@ -194,6 +218,16 @@ md.push(`## System prompt (same catalog)`, "");
 md.push(`| | chars | tokens |`, `|---|---:|---:|`);
 for (const f of FORMATS) {
   md.push(`| ${f} | ${staticTokens.systemPrompt[f].chars} | ${num(staticTokens.systemPrompt[f].tokens)} |`);
+}
+md.push("", `## UI tokens of actual responses`, "");
+md.push(
+  `Successful responses (ingenui ${actualUi.responses.ingenui}, json-render ${actualUi.responses["json-render"]}), UI part only: ` +
+    `ingenui ${num(actualUi.mean.ingenui)} vs json-render ${num(actualUi.mean["json-render"])} tokens on average — **×${num(actualUi.ratio, 2)}**.`,
+  "",
+);
+md.push(`| task | ingenui (mean) | json-render (mean) | ratio |`, `|---|---:|---:|---:|`);
+for (const [t, v] of Object.entries(actualUi.byTask)) {
+  md.push(`| ${t} | ${num(v.ingenui)} | ${num(v["json-render"])} | ×${num(v["json-render"] / v.ingenui, 2)} |`);
 }
 md.push("", `## Same UI, two notations`, "");
 md.push(

@@ -9,6 +9,21 @@
 | ingenui | 4213 | 1570 |
 | json-render | 16452 | 6032 |
 
+## UI tokens of actual responses
+
+Successful responses (ingenui 393, json-render 395), UI part only: ingenui 351 vs json-render 969 tokens on average — **×2.76**.
+
+| task | ingenui (mean) | json-render (mean) | ratio |
+|---|---:|---:|---:|
+| product | 250 | 712 | ×2.84 |
+| dashboard | 285 | 881 | ×3.09 |
+| profile | 236 | 718 | ×3.04 |
+| order | 248 | 788 | ×3.18 |
+| weather | 397 | 1196 | ×3.01 |
+| plans | 548 | 1694 | ×3.09 |
+| team | 496 | 749 | ×1.51 |
+| incident | 340 | 1008 | ×2.97 |
+
 ## Same UI, two notations
 
 Slides' product sample: JSX 250 tokens vs SpecStream 637 tokens.
