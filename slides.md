@@ -265,6 +265,135 @@ layout: demo
 
 ---
 
+# 実験: 本物のClaudeで比べてみた
+
+- 同じコンポーネントを両方に定義
+- **各ライブラリ自身のプロンプト**で同じ依頼
+- 8種類のUI × 4つのモデル設定
+- 計 **800回** 生成
+
+<!--
+- コンポーネント13種類。依頼は商品カード、ダッシュボード、プロフィール、注文状況、天気予報、料金プラン比較、メンバー一覧、障害レポート
+- モデル設定: Haiku 5.5（思考なし / effort: low）× 20回、Sonnet 5.5・Opus 5.5（effort: low）× 5回
+- カタログはパラメータを揃えている: tone/variant は両方 string（ingenuiの型にenumがないため）
+- json-render は catalog.prompt()（デフォルトの standalone モード）、ingenui は formatGenUiPrompt
+- 依頼文にデータを全部書いておき、描画結果にそれが出ているかで判定
+- コードと生データ: experiments/ （pnpm exp:run / exp:count / exp:report）
+-->
+
+---
+
+# 成功の判定
+
+両方を同じ基準で採点
+
+- **valid**: ライブラリの検証でエラーなし
+- **content**: 描画結果に依頼した情報が全部ある
+
+<!--
+- valid の中身: ingenui はパーサーの検証 + 描画エラーなし。json-render は spec / カタログの検証 + props・アクション名のチェック
+- json-render の validateSpec / catalog.validate は props の欠落や未定義アクションを見ないので、
+  ingenui と条件を揃えるためにその2つを追加でチェックした
+- 描画は Node で react-dom/server、両方同じ最小限のコンポーネント
+- 「依頼した情報」= 価格 ¥24,800 などの事実を文字列で照合
+-->
+
+---
+layout: demo
+---
+
+# 結果: 同じUIのトークン数
+
+<ExperimentResults view="same-ui" />
+
+<!--
+- ingenuiの実際の出力（valid な ui+jsx ブロック）を、同じ画面を描くSpecStreamに機械的に変換して数えた
+- 同じUIで、JSONパッチ列はJSXの約2.8倍のトークン
+- トークン数は count_tokens API（Haiku 5.5 のトークナイザ）
+-->
+
+---
+layout: demo
+---
+
+# 結果: 1リクエストあたり
+
+<ExperimentResults view="per-request" condition="haiku-low" />
+
+<!--
+- 出力トークンが約3倍 → 応答時間も約3倍、料金も約3.5倍
+- システムプロンプトもjson-renderは約4倍（state, repeat, visible, watch…の説明が入る）
+- 他のモデル条件でも傾向は同じ（experiments/results/summary.md）
+-->
+
+---
+
+# 結果: 成功率
+
+<ExperimentResults view="success" />
+
+<br />
+
+**どちらもほぼ100%**。差はつかなかった。
+
+<!--
+- Haiku は 8種類 × 20回、Sonnet / Opus は 8種類 × 5回
+- 安いモデル・低effortでも、どちらの形式もちゃんと書ける
+- 差がでたのは「コスト」のほう
+-->
+
+---
+
+# 失敗の例
+
+<Columns>
+<div>
+
+**ingenui**: `%` が消える
+
+```jsx
+<Stat label="解約率" value={1.2} />
+```
+
+</div>
+<div>
+
+**json-render**: ない型を作る
+
+```json
+{"type":"member-list", …}
+```
+
+</div>
+</Columns>
+
+<br />
+
+どちらの失敗も**少数**。工夫で減らせそう。
+
+<!--
+- ingenui側の失敗は、ほぼ全部ダッシュボードの「解約率 1.2%」（Haiku・思考なしで 6/20回）。value={1.2} と数値リテラルで書いてしまう
+  （一度は value={1.2%} という不正な式も）。valueの説明を工夫すれば減らせそう
+- json-render側は、カタログにない member-list 型を作る、repeat の子要素がない、children の欠落など
+-->
+
+---
+
+# 仮説の検証
+
+> JSXなら文字数効率がよく、AIも書き慣れている？
+
+- **文字数効率**: ✅ 約2.8倍少ない<br />→ 時間・料金も約3倍の差
+- **書き慣れ**: 成功率は差なし
+
+<!--
+- 書き慣れについては、成功率では差が出なかった。ただし json-render は約4倍長いシステムプロンプトで書き方を教えている
+- つまり「同じ成功率を、ずっと少ないプロンプトと出力で達成できる」というのが結論
+-->
+
+
+---
+
 # 必要なもの
 
 中途半端なJSXをパースし、コンポーネントツリーとしてレンダリングする仕組みが必要。

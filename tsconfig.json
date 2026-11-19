@@ -17,7 +17,8 @@
     "noUnusedParameters": true,
     "noEmit": true,
     "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
     "types": ["node", "vite/client"]
   },
-  "include": ["src", "plugins", "vite.config.ts"]
+  "include": ["src", "plugins", "experiments", "vite.config.ts"]
 }

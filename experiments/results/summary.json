@@ -1,0 +1,367 @@
+{
+  "generatedAt": "2026-11-19T01:10:11.256Z",
+  "tokenModel": "claude-haiku-5-5",
+  "runs": 800,
+  "staticTokens": {
+    "systemPrompt": {
+      "ingenui": {
+        "chars": 4213,
+        "tokens": 1570
+      },
+      "json-render": {
+        "chars": 16452,
+        "tokens": 6032
+      }
+    },
+    "productSample": {
+      "jsx": {
+        "chars": 441,
+        "tokens": 250
+      },
+      "specStream": {
+        "chars": 1355,
+        "tokens": 637
+      }
+    }
+  },
+  "sameUi": {
+    "blocks": 377,
+    "jsxTokens": 130055,
+    "specTokens": 361942,
+    "ratio": 2.782991811156818,
+    "byTask": {
+      "product": {
+        "blocks": 50,
+        "jsx": 250.22,
+        "spec": 659.26
+      },
+      "dashboard": {
+        "blocks": 49,
+        "jsx": 282.6530612244898,
+        "spec": 873.8979591836735
+      },
+      "profile": {
+        "blocks": 50,
+        "jsx": 235.98,
+        "spec": 679.28
+      },
+      "order": {
+        "blocks": 50,
+        "jsx": 248.16,
+        "spec": 699.24
+      },
+      "weather": {
+        "blocks": 32,
+        "jsx": 386.9375,
+        "spec": 1211.96875
+      },
+      "plans": {
+        "blocks": 50,
+        "jsx": 548.02,
+        "spec": 1680.86
+      },
+      "team": {
+        "blocks": 46,
+        "jsx": 494.2391304347826,
+        "spec": 1041.7391304347825
+      },
+      "incident": {
+        "blocks": 50,
+        "jsx": 339.38,
+        "spec": 929.72
+      }
+    }
+  },
+  "cells": [
+    {
+      "condition": "haiku-nothink",
+      "format": "ingenui",
+      "n": 160,
+      "success": 0.95625,
+      "valid": 0.99375,
+      "content": 0.95625,
+      "successCI": [
+        0.9124559185916465,
+        0.9786486604651987
+      ],
+      "uiTokensMedian": 302,
+      "outputTokensMean": 375.725,
+      "inputTokensMean": 1686.125,
+      "latencyMsMedian": 1404.5,
+      "costPerRequest": 0.0003564750000000003,
+      "costPerSuccess": 0.0003727843137254905,
+      "stopReasons": {
+        "end_turn": 160
+      },
+      "topProblems": [
+        [
+          "content: missing facts / unwired action",
+          6
+        ],
+        [
+          "jsx-error: Unsupported expression in attribute \"…\": {…}",
+          1
+        ]
+      ]
+    },
+    {
+      "condition": "haiku-nothink",
+      "format": "json-render",
+      "n": 160,
+      "success": 0.9875,
+      "valid": 0.9875,
+      "content": 0.9875,
+      "successCI": [
+        0.9555737384223193,
+        0.9965654008438989
+      ],
+      "uiTokensMedian": 817.5,
+      "outputTokensMean": 966.0125,
+      "inputTokensMean": 6148.125,
+      "latencyMsMedian": 2693,
+      "costPerRequest": 0.0010978187500000004,
+      "costPerSuccess": 0.001111715189873418,
+      "stopReasons": {
+        "end_turn": 160
+      },
+      "topProblems": [
+        [
+          "catalog: elements.*.type: Invalid option: expected one of \"…\"|\"…\"|\"…\"|\"…\"|\"…\"|\"…\"|\"…\"|\"…\"|",
+          2
+        ]
+      ]
+    },
+    {
+      "condition": "haiku-low",
+      "format": "ingenui",
+      "n": 160,
+      "success": 1,
+      "valid": 1,
+      "content": 1,
+      "successCI": [
+        0.9765529633499672,
+        1
+      ],
+      "uiTokensMedian": 304,
+      "outputTokensMean": 426.925,
+      "inputTokensMean": 1687.125,
+      "latencyMsMedian": 1561,
+      "costPerRequest": 0.0003821750000000001,
+      "costPerSuccess": 0.0003821750000000001,
+      "stopReasons": {
+        "end_turn": 160
+      },
+      "topProblems": []
+    },
+    {
+      "condition": "haiku-low",
+      "format": "json-render",
+      "n": 160,
+      "success": 0.9875,
+      "valid": 0.9875,
+      "content": 0.9875,
+      "successCI": [
+        0.9555737384223193,
+        0.9965654008438989
+      ],
+      "uiTokensMedian": 796,
+      "outputTokensMean": 1438.7625,
+      "inputTokensMean": 6149.125,
+      "latencyMsMedian": 4722.5,
+      "costPerRequest": 0.0013342937499999999,
+      "costPerSuccess": 0.0013511835443037973,
+      "stopReasons": {
+        "end_turn": 160
+      },
+      "topProblems": [
+        [
+          "spec: Element \"…\" has \"…\" but no children. The repeated template must be a child element: ",
+          2
+        ]
+      ]
+    },
+    {
+      "condition": "sonnet-low",
+      "format": "ingenui",
+      "n": 40,
+      "success": 1,
+      "valid": 1,
+      "content": 1,
+      "successCI": [
+        0.9123754607496077,
+        1
+      ],
+      "uiTokensMedian": 317,
+      "outputTokensMean": 364.175,
+      "inputTokensMean": 1687.125,
+      "latencyMsMedian": 2863,
+      "costPerRequest": 0.007015999999999999,
+      "costPerSuccess": 0.007015999999999999,
+      "stopReasons": {
+        "end_turn": 40
+      },
+      "topProblems": []
+    },
+    {
+      "condition": "sonnet-low",
+      "format": "json-render",
+      "n": 40,
+      "success": 0.975,
+      "valid": 0.975,
+      "content": 1,
+      "successCI": [
+        0.8711834051199223,
+        0.9955732825922052
+      ],
+      "uiTokensMedian": 988.5,
+      "outputTokensMean": 998.45,
+      "inputTokensMean": 6149.125,
+      "latencyMsMedian": 5166.5,
+      "costPerRequest": 0.022282749999999997,
+      "costPerSuccess": 0.02285410256410256,
+      "stopReasons": {
+        "end_turn": 40
+      },
+      "topProblems": [
+        [
+          "catalog: elements.*.children: Invalid input: expected array, received undefined",
+          1
+        ]
+      ]
+    },
+    {
+      "condition": "opus-low",
+      "format": "ingenui",
+      "n": 40,
+      "success": 1,
+      "valid": 1,
+      "content": 1,
+      "successCI": [
+        0.9123754607496077,
+        1
+      ],
+      "uiTokensMedian": 359.5,
+      "outputTokensMean": 405.475,
+      "inputTokensMean": 1687.125,
+      "latencyMsMedian": 3052,
+      "costPerRequest": 0.014858000000000001,
+      "costPerSuccess": 0.014858000000000001,
+      "stopReasons": {
+        "end_turn": 40
+      },
+      "topProblems": []
+    },
+    {
+      "condition": "opus-low",
+      "format": "json-render",
+      "n": 40,
+      "success": 1,
+      "valid": 1,
+      "content": 1,
+      "successCI": [
+        0.9123754607496077,
+        1
+      ],
+      "uiTokensMedian": 1001.5,
+      "outputTokensMean": 983.625,
+      "inputTokensMean": 6149.125,
+      "latencyMsMedian": 6806.5,
+      "costPerRequest": 0.044269,
+      "costPerSuccess": 0.044269,
+      "stopReasons": {
+        "end_turn": 40
+      },
+      "topProblems": []
+    }
+  ],
+  "perTask": {
+    "haiku-nothink": {
+      "ingenui": {
+        "product": "20/20",
+        "dashboard": "14/20",
+        "profile": "20/20",
+        "order": "20/20",
+        "weather": "20/20",
+        "plans": "20/20",
+        "team": "20/20",
+        "incident": "19/20"
+      },
+      "json-render": {
+        "product": "20/20",
+        "dashboard": "20/20",
+        "profile": "20/20",
+        "order": "20/20",
+        "weather": "20/20",
+        "plans": "20/20",
+        "team": "18/20",
+        "incident": "20/20"
+      }
+    },
+    "haiku-low": {
+      "ingenui": {
+        "product": "20/20",
+        "dashboard": "20/20",
+        "profile": "20/20",
+        "order": "20/20",
+        "weather": "20/20",
+        "plans": "20/20",
+        "team": "20/20",
+        "incident": "20/20"
+      },
+      "json-render": {
+        "product": "20/20",
+        "dashboard": "20/20",
+        "profile": "20/20",
+        "order": "18/20",
+        "weather": "20/20",
+        "plans": "20/20",
+        "team": "20/20",
+        "incident": "20/20"
+      }
+    },
+    "sonnet-low": {
+      "ingenui": {
+        "product": "5/5",
+        "dashboard": "5/5",
+        "profile": "5/5",
+        "order": "5/5",
+        "weather": "5/5",
+        "plans": "5/5",
+        "team": "5/5",
+        "incident": "5/5"
+      },
+      "json-render": {
+        "product": "5/5",
+        "dashboard": "5/5",
+        "profile": "5/5",
+        "order": "5/5",
+        "weather": "5/5",
+        "plans": "4/5",
+        "team": "5/5",
+        "incident": "5/5"
+      }
+    },
+    "opus-low": {
+      "ingenui": {
+        "product": "5/5",
+        "dashboard": "5/5",
+        "profile": "5/5",
+        "order": "5/5",
+        "weather": "5/5",
+        "plans": "5/5",
+        "team": "5/5",
+        "incident": "5/5"
+      },
+      "json-render": {
+        "product": "5/5",
+        "dashboard": "5/5",
+        "profile": "5/5",
+        "order": "5/5",
+        "weather": "5/5",
+        "plans": "5/5",
+        "team": "5/5",
+        "incident": "5/5"
+      }
+    }
+  }
+}

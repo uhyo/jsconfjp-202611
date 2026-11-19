@@ -7,6 +7,7 @@ import type { MDXComponents } from "mdx/types";
 
 import { ClaudeChatDemo } from "./demos/ClaudeChatDemo";
 import { CompareDemo } from "./demos/CompareDemo";
+import { ExperimentResults } from "./demos/ExperimentResults";
 import { GenUiMessageDemo } from "./demos/GenUiMessageDemo";
 import { JsonRenderDemo } from "./demos/JsonRenderDemo";
 import { JsxStreamDemo } from "./demos/JsxStreamDemo";
@@ -26,4 +27,5 @@ export const mdxComponents: MDXComponents = {
   CompareDemo,
   PromptCompare,
   ClaudeChatDemo,
+  ExperimentResults,
 };
