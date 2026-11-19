@@ -19,5 +19,5 @@
     "allowImportingTsExtensions": true,
     "types": ["node", "vite/client"]
   },
-  "include": ["src", "plugins", "vite.config.ts"]
+  "include": ["src", "plugins", "experiments", "vite.config.ts"]
 }
