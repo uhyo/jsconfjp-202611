@@ -265,12 +265,14 @@ layout: demo
 
 ---
 
-# 実験: 本物のClaudeで比べてみた
+# 比較実験
 
-- 同じコンポーネントを両方に定義
-- **各ライブラリ自身のプロンプト**で同じ依頼
-- 8種類のUI × 4つのモデル設定
-- 計 **800回** 生成
+json-renderとingenuiのそれぞれで、<br />Claudeに同じUIを生成させた。
+
+<br />
+
+- 8種類のUI × 4つのモデル設定で実験
+- 同じコンポーネント定義・同じ依頼文<br /><small>（プロンプトはそれぞれのライブラリが提供するものを使用）</small>
 
 <!--
 - コンポーネント13種類。依頼は商品カード、ダッシュボード、プロフィール、注文状況、天気予報、料金プラン比較、メンバー一覧、障害レポート
@@ -279,23 +281,6 @@ layout: demo
 - json-render は catalog.prompt()（デフォルトの standalone モード）、ingenui は formatGenUiPrompt
 - 依頼文にデータを全部書いておき、描画結果にそれが出ているかで判定
 - コードと生データ: experiments/ （pnpm exp:run / exp:count / exp:report）
--->
-
----
-
-# 成功の判定
-
-両方を同じ基準で採点
-
-- **valid**: ライブラリの検証でエラーなし
-- **content**: 描画結果に依頼した情報が全部ある
-
-<!--
-- valid の中身: ingenui はパーサーの検証 + 描画エラーなし。json-render は spec / カタログの検証 + props・アクション名のチェック
-- json-render の validateSpec / catalog.validate は props の欠落や未定義アクションを見ないので、
-  ingenui と条件を揃えるためにその2つを追加でチェックした
-- 描画は Node で react-dom/server、両方同じ最小限のコンポーネント
-- 「依頼した情報」= 価格 ¥24,800 などの事実を文字列で照合
 -->
 
 ---
