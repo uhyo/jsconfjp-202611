@@ -265,122 +265,6 @@ layout: demo
 
 ---
 
-# 比較実験
-
-json-renderとingenuiのそれぞれで、<br />Claudeに同じUIを生成させた。
-
-<br />
-
-- 8種類のUI × 4つのモデル設定で実験
-- 同じコンポーネント定義・同じ依頼文<br /><small>（プロンプトはそれぞれのライブラリが提供するものを使用）</small>
-
-<!--
-- コンポーネント13種類。依頼は商品カード、ダッシュボード、プロフィール、注文状況、天気予報、料金プラン比較、メンバー一覧、障害レポート
-- モデル設定: Haiku 5.5（思考なし / effort: low）× 20回、Sonnet 5.5・Opus 5.5（effort: low）× 5回
-- カタログはパラメータを揃えている: tone/variant は両方 string（ingenuiの型にenumがないため）
-- json-render は catalog.prompt()（デフォルトの standalone モード）、ingenui は formatGenUiPrompt
-- 依頼文にデータを全部書いておき、描画結果にそれが出ているかで判定
-- コードと生データ: experiments/ （pnpm exp:run / exp:count / exp:report）
--->
-
----
-layout: demo
----
-
-# 結果: UIのトークン数
-
-<ExperimentResults view="actual-ui" />
-
-<!--
-- 同じ依頼に対する、それぞれの形式の実際の応答（成功したもの）のUI部分を数えた
-- 平均で json-render は ingenui の約2.8倍のトークン
-- メンバー一覧だけ差が小さい（×1.5）: json-render は repeat + state で「1人分のテンプレート + データ配列」と書けるため。JSXにはループがないので5人分を書き下す。json-render の応答の約3分の1が state を使っていた
-- 「完全に同じUI」でも比べた: ingenuiの出力を同じ画面を描くSpecStreamに機械的に変換すると ×2.8（実際の応答との差は、変換のキーが短いことと、repeat を使わないこと）
-- トークン数は count_tokens API（Haiku 5.5 のトークナイザ）
--->
-
----
-layout: demo
----
-
-# 結果: 1リクエストあたり
-
-<ExperimentResults view="per-request" condition="haiku-low" />
-
-<!--
-- 出力トークンが約3倍 → 応答時間も約3倍、料金も約3.5倍
-- システムプロンプトもjson-renderは約4倍（state, repeat, visible, watch…の説明が入る）
-- 他のモデル条件でも傾向は同じ（experiments/results/summary.md）
--->
-
----
-
-# 結果: 成功率
-
-<ExperimentResults view="success" />
-
-<br />
-
-**どちらもほぼ100%**。差はつかなかった。
-
-<!--
-- Haiku は 8種類 × 20回、Sonnet / Opus は 8種類 × 5回
-- 安いモデル・低effortでも、どちらの形式もちゃんと書ける
-- 差がでたのは「コスト」のほう
--->
-
----
-
-# 失敗の例
-
-<Columns>
-<div>
-
-**ingenui**: `%` が消える
-
-```jsx
-<Stat label="解約率" value={1.2} />
-```
-
-</div>
-<div>
-
-**json-render**: ない型を作る
-
-```json
-{"type":"member-list", …}
-```
-
-</div>
-</Columns>
-
-<br />
-
-どちらの失敗も**少数**。工夫で減らせそう。
-
-<!--
-- ingenui側の失敗は、ほぼ全部ダッシュボードの「解約率 1.2%」（Haiku・思考なしで 6/20回）。value={1.2} と数値リテラルで書いてしまう
-  （一度は value={1.2%} という不正な式も）。valueの説明を工夫すれば減らせそう
-- json-render側は、カタログにない member-list 型を作る、repeat の子要素がない、children の欠落など
--->
-
----
-
-# 仮説の検証
-
-> JSXなら文字数効率がよく、AIも書き慣れている？
-
-- **文字数効率**: ✅ 約2.8倍少ない<br />→ 時間・料金も約3倍の差
-- **書き慣れ**: 成功率は差なし
-
-<!--
-- 書き慣れについては、成功率では差が出なかった。ただし json-render は約4倍長いシステムプロンプトで書き方を教えている
-- つまり「同じ成功率を、ずっと少ないプロンプトと出力で達成できる」というのが結論
--->
-
-
----
-
 # 必要なもの
 
 中途半端なJSXをパースし、コンポーネントツリーとしてレンダリングする仕組みが必要。
@@ -424,10 +308,131 @@ layout: demo
 </div>
 
 ---
+layout: section
+---
+
+# 比較実験
+
+---
+
+# 比較実験
+
+json-renderとingenuiのそれぞれで、<br />Claudeに同じUIを生成させた。
+
+<br />
+
+- 8種類のUI × 4つのモデル設定で実験
+- 同じコンポーネント定義・同じ依頼文<br /><small>（プロンプトはそれぞれのライブラリが提供するものを使用）</small>
+
+<!--
+- コンポーネント13種類。依頼は商品カード、ダッシュボード、プロフィール、注文状況、天気予報、料金プラン比較、メンバー一覧、障害レポート
+- モデル設定: Haiku 5.5（思考なし / effort: low）× 20回、Sonnet 5.5・Opus 5.5（effort: low）× 5回
+- カタログはパラメータを揃えている: tone/variant は両方 string（ingenuiの型にenumがないため）
+- json-render は catalog.prompt()（デフォルトの standalone モード）、ingenui は formatGenUiPrompt
+- 依頼文にデータを全部書いておき、描画結果にそれが出ているかで判定
+- コードと生データ: experiments/ （pnpm exp:run / exp:count / exp:report）
+-->
+
+---
+layout: demo
+---
+
+# 結果: UIのトークン数
+
+<ExperimentResults view="actual-ui" />
+
+<!--
+- 同じ依頼に対する、それぞれの形式の実際の応答（成功したもの）のUI部分を数えた
+- 平均で json-render は ingenui の約2.8倍のトークン
+- メンバー一覧だけ差が小さい（×1.5）: json-render は repeat + state で「1人分のテンプレート + データ配列」と書けるため。JSXにはループがないので5人分を書き下す。json-render の応答の約3分の1が state を使っていた
+- 「完全に同じUI」でも比べた: ingenuiの出力を同じ画面を描くSpecStreamに機械的に変換すると ×2.8（実際の応答との差は、変換のキーが短いことと、repeat を使わないこと）
+- トークン数は count_tokens API（Haiku 5.5 のトークナイザ）
+-->
+
+---
+layout: demo
+---
+
+# 結果: その他の数値（入出力関連）
+
+<ExperimentResults view="per-request" condition="haiku-low" />
+
+<!--
+- 出力トークンが約3倍 → 応答時間も約3倍、料金も約3.5倍
+- システムプロンプトもjson-renderは約4倍（state, repeat, visible, watch…の説明が入る）
+- 他のモデル条件でも傾向は同じ（experiments/results/summary.md）
+-->
+
+---
+
+# 結果: 成功率
+
+<ExperimentResults view="success" />
+
+<br />
+
+UIを正しく出力できた割合。どちらもほぼ100%。
+
+<!--
+- Haiku は 8種類 × 20回、Sonnet / Opus は 8種類 × 5回
+- 安いモデル・低effortでも、どちらの形式もちゃんと書ける
+- 差がでたのは「コスト」のほう
+-->
+
+---
+
+# 失敗の例
+
+<Columns>
+<div>
+
+**ingenui**: コンポーネントの仕様を誤解する<small>（`value="1.2%"`が正解）</small>
+
+```jsx
+<Stat label="解約率" value={1.2} />
+```
+
+</div>
+<div>
+
+**json-render**: ない型を<br />作る
+
+```json
+{"type":"member-list", …}
+```
+
+</div>
+</Columns>
+
+方式の問題というよりプロンプトの書き方の範疇か。
+
+<!--
+- ingenui側の失敗は、ほぼ全部ダッシュボードの「解約率 1.2%」（Haiku・思考なしで 6/20回）。value={1.2} と数値リテラルで書いてしまう
+  （一度は value={1.2%} という不正な式も）。valueの説明を工夫すれば減らせそう
+- json-render側は、カタログにない member-list 型を作る、repeat の子要素がない、children の欠落など
+-->
+
+---
+
+# 仮説の検証
+
+- **文字数効率（出力）**: JSXは約2.8倍少ない<br />→ 時間・料金も約3倍の差
+- **成功率**: 差は見られず
+
+<br />
+
+システムプロンプトはjson-renderが4倍くらい<br />長いので、JSXのほうがAIが書き慣れていると言えなくもないかも？
+
+<!--
+- 書き慣れについては、成功率では差が出なかった。ただし json-render は約4倍長いシステムプロンプトで書き方を教えている
+- つまり「同じ成功率を、ずっと少ないプロンプトと出力で達成できる」というのが結論
+-->
+
+---
 
 # 前半のまとめ
 
-- AIに**JSXを出力**してもらうことで、効率がよく、AIも書き慣れている形式でUIを生成できる
+- AIに**JSXを出力**してもらうことで、効率よくUIを生成できる
 - **インクリメンタルJSXパーサー**を実装することで、この方式を実現できた
 
 ---
