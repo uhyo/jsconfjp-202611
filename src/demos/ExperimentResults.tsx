@@ -85,9 +85,10 @@ function TaskBars({ rows, note }: { rows: [task: string, jsx: number, spec: numb
           <div key={task} className="exp-group">
             <div className="exp-group__label">{TASK_LABELS[task] ?? task}</div>
             <div className="exp-group__bars">
-              <Bar format="ingenui" value={jsx} max={max} label={`${fmt(jsx)} tokens`} />
-              <Bar format="json-render" value={spec} max={max} label={`${fmt(spec)} tokens（×${(spec / jsx).toFixed(1)}）`} />
+              <Bar format="ingenui" value={jsx} max={max} label={fmt(jsx)} />
+              <Bar format="json-render" value={spec} max={max} label={fmt(spec)} />
             </div>
+            <div className="exp-group__ratio">×{(spec / jsx).toFixed(1)}</div>
           </div>
         ))}
       </div>
@@ -137,7 +138,7 @@ function PerRequest({ condition }: { condition: string }) {
   const sp = summary.staticTokens.systemPrompt;
   const panels: { title: ReactNode; values: [number, number]; show: (n: number) => string }[] = [
     {
-      title: "システムプロンプト（入力トークン）",
+      title: "システムプロンプト",
       values: [sp.ingenui.tokens, sp["json-render"].tokens],
       show: fmt,
     },
@@ -154,7 +155,7 @@ function PerRequest({ condition }: { condition: string }) {
     },
   ];
   return (
-    <div className="exp">
+    <div className="exp exp--panels">
       <Legend />
       <div className="exp-panels">
         {panels.map((p, i) => {

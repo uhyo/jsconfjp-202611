@@ -768,31 +768,31 @@
 .exp {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  font-size: 20px;
-  line-height: 1.3;
+  gap: 12px;
+  font-size: 32px;
+  line-height: 1.25;
   color: var(--text);
 }
 
 .exp-legend {
   display: flex;
-  gap: 28px;
-  font-size: 18px;
-  color: var(--muted);
+  gap: 40px;
+  font-size: 32px;
+  color: var(--text);
 }
 
 .exp-legend__item {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .exp-swatch {
   display: inline-block;
-  width: 14px;
-  height: 14px;
-  border-radius: 3px;
-  vertical-align: -1px;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  vertical-align: -2px;
 }
 
 .exp-swatch--ingenui,
@@ -808,18 +808,27 @@
 .exp-groups {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
 }
 
 .exp-group {
   display: grid;
-  grid-template-columns: 170px 1fr;
+  grid-template-columns: 236px 1fr 100px;
   align-items: center;
   gap: 16px;
 }
 
 .exp-group__label {
-  font-size: 18px;
+  font-size: 32px;
+  line-height: 1;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.exp-group__ratio {
+  font-size: 32px;
+  line-height: 1;
+  font-weight: 700;
   text-align: right;
 }
 
@@ -827,16 +836,16 @@
 .exp-panel {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 }
 
 .exp-bar {
   display: flex;
   align-items: center;
-  gap: 8px;
-  height: 18px;
+  gap: 10px;
+  height: 24px;
   /* Leave room for the value label after the longest bar. */
-  padding-right: 200px;
+  padding-right: 100px;
 }
 
 .exp-bar__fill {
@@ -848,26 +857,45 @@
 
 .exp-bar__value {
   flex: none;
-  font-size: 15px;
+  font-size: 24px;
+  line-height: 1;
   color: var(--muted);
   white-space: nowrap;
 }
 
 .exp-panels {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 28px 48px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 64px 56px;
+}
+
+/* Per-request view: fewer rows, so spread them over the slide's height. */
+.exp--panels {
+  gap: 28px;
+}
+
+.exp--panels .exp-panel {
+  gap: 8px;
 }
 
 .exp-panel .exp-bar {
-  height: 24px;
+  height: 48px;
+  padding-right: 240px;
+}
+
+.exp-panel .exp-bar__value {
+  font-size: 32px;
+  color: var(--text);
 }
 
 .exp-panel__title {
   display: flex;
   justify-content: space-between;
-  font-size: 19px;
-  margin-bottom: 6px;
+  align-items: baseline;
+  gap: 16px;
+  font-size: 32px;
+  margin-bottom: 10px;
+  white-space: nowrap;
 }
 
 .exp-panel__ratio {
@@ -875,7 +903,7 @@
 }
 
 .exp-note {
-  font-size: 16px;
+  font-size: 22px;
   color: var(--muted);
 }
 
