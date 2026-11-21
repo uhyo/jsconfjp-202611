@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@ingenui/incremental-jsx-parser':
-        specifier: 0.0.2
-        version: 0.0.2(react@19.2.7)
+        specifier: 0.0.3
+        version: 0.0.3(react@19.2.7)
       '@json-render/core':
         specifier: 0.22.0
         version: 0.22.0(zod@4.6.7)
@@ -18,8 +18,8 @@ importers:
         specifier: 0.22.0
         version: 0.22.0(react@19.2.7)(zod@4.6.7)
       ingenui:
-        specifier: 0.0.2
-        version: 0.0.2(react@19.2.7)
+        specifier: 0.0.3
+        version: 0.0.3(react@19.2.7)
       react:
         specifier: 19.2.7
         version: 19.2.7
@@ -88,8 +88,8 @@ packages:
     resolution: {integrity: sha512-Y5tqevQaUAZhhj82BpYMNC1ssvLQTVAfwKdm8iy8qwmhvC2/CpcAu8OC+QEtjM7pMk7knx83u1Qj8gzkicyelw==}
     engines: {node: '>=6.9.0'}
 
-  '@ingenui/incremental-jsx-parser@0.0.2':
-    resolution: {integrity: sha512-oTMvayCiT8k7R5/h8MJD97rSQ5TNpCGBzaJYCtLDDzP7p90pN3cM4xTjoyUQcdQjCeFpq0pT45bUxVQDr+s7/w==}
+  '@ingenui/incremental-jsx-parser@0.0.3':
+    resolution: {integrity: sha512-7wDADAYPQT0PGtbGdD+kChtOZoxDh2R5S/Q0aEtYcISNzZdBIL4vqnijhRjjk99Yd6eenYHkggh+VCkxRNBYTg==}
     engines: {node: '>=20'}
     peerDependencies:
       react: '>=18'
@@ -430,8 +430,8 @@ packages:
   html-void-elements@3.0.0:
     resolution: {integrity: sha512-bEqo66MRXsUGxWHV5IP0PUiAWwoEjba4VCzg0LjFJBpchPaTfyfCKTG6bc5F8ucKec3q5y6qOdGyYTSBEvhCrg==}
 
-  ingenui@0.0.2:
-    resolution: {integrity: sha512-MIq4Guk+T4zcI0wJE736Hp/CB01jM6EeRZFGDb4gXYdyKnAqoY9TOm7LDrUdhbjYYzBVdjARBuXo5luYxJV61g==}
+  ingenui@0.0.3:
+    resolution: {integrity: sha512-tCOZ5vlxY6Xi9u8sSY/GPLIpnxNVgvND/Ku5uN9Pwy9p6d744ouoZhLHAtxEGiN30x40tVLUAHfvQPCi6P5gLg==}
     engines: {node: '>=20'}
     peerDependencies:
       react: '>=18'
@@ -930,7 +930,7 @@ snapshots:
 
   '@babel/runtime@7.29.14': {}
 
-  '@ingenui/incremental-jsx-parser@0.0.2(react@19.2.7)':
+  '@ingenui/incremental-jsx-parser@0.0.3(react@19.2.7)':
     optionalDependencies:
       react: 19.2.7
 
@@ -1287,9 +1287,9 @@ snapshots:
 
   html-void-elements@3.0.0: {}
 
-  ingenui@0.0.2(react@19.2.7):
+  ingenui@0.0.3(react@19.2.7):
     dependencies:
-      '@ingenui/incremental-jsx-parser': 0.0.2(react@19.2.7)
+      '@ingenui/incremental-jsx-parser': 0.0.3(react@19.2.7)
       react: 19.2.7
 
   inline-style-parser@0.2.7: {}
