@@ -38,6 +38,12 @@ const CONDITION_LABELS: Record<string, string> = {
 
 const fmt = (n: number) => Math.round(n).toLocaleString("en-US");
 
+/** How much smaller ingenui's value is than json-render's, e.g. `−64%`. */
+const reduction = (ingenui: number, jsonRender: number) => `−${Math.round((1 - ingenui / jsonRender) * 100)}%`;
+
+/** The same, from a json-render / ingenui ratio. */
+const reductionFromRatio = (ratio: number) => reduction(1, ratio);
+
 export interface ExperimentResultsProps {
   view: "actual-ui" | "same-ui" | "per-request" | "success";
   /** For `per-request`: a condition id (default `haiku-low`). */
@@ -88,7 +94,7 @@ function TaskBars({ rows, note }: { rows: [task: string, jsx: number, spec: numb
               <Bar format="ingenui" value={jsx} max={max} label={fmt(jsx)} />
               <Bar format="json-render" value={spec} max={max} label={fmt(spec)} />
             </div>
-            <div className="exp-group__ratio">×{(spec / jsx).toFixed(1)}</div>
+            <div className="exp-group__ratio">{reduction(jsx, spec)}</div>
           </div>
         ))}
       </div>
@@ -105,7 +111,7 @@ function ActualUi() {
       note={
         <>
           成功した実際の応答（ingenui {actualUi.responses.ingenui}件、json-render {actualUi.responses["json-render"]}
-          件）のUI部分の平均トークン数。全体で<strong> ×{actualUi.ratio.toFixed(2)}</strong>
+          件）のUI部分の平均トークン数。ingenuiは全体で<strong>{reductionFromRatio(actualUi.ratio)}</strong>
         </>
       }
     />
@@ -120,8 +126,8 @@ function SameUi() {
         .map(([task, v]) => [task, v.jsx, v.spec])}
       note={
         <>
-          実際の出力 {summary.sameUi.blocks} ブロックを同じ画面のSpecStreamに変換して比較（平均トークン数）。合計で
-          <strong> ×{summary.sameUi.ratio.toFixed(2)}</strong>
+          実際の出力 {summary.sameUi.blocks} ブロックを同じ画面のSpecStreamに変換して比較（平均トークン数）。ingenuiは合計で
+          <strong>{reductionFromRatio(summary.sameUi.ratio)}</strong>
         </>
       }
     />
@@ -164,7 +170,7 @@ function PerRequest({ condition }: { condition: string }) {
             <div key={i} className="exp-panel">
               <div className="exp-panel__title">
                 {p.title}
-                <span className="exp-panel__ratio">×{(p.values[1] / p.values[0]).toFixed(1)}</span>
+                <span className="exp-panel__ratio">{reduction(p.values[0], p.values[1])}</span>
               </div>
               {FORMATS.map((f, j) => (
                 <Bar key={f} format={f} value={p.values[j]!} max={max} label={p.show(p.values[j]!)} />
