@@ -5,7 +5,7 @@ deckTitle: AIフレンドリーなGenerative UIをJSXで
 
 # AIフレンドリーなGenerative UIを<br />JSXで
 
-2026-11-23 JSConf JP 2026
+2026-11-22 JSConf JP 2026
 
 <!--
 （これはスピーカーノートの例です。HTMLコメントがノートになります。p キーで発表者ビューを開けます）
