@@ -57,11 +57,15 @@ to the demo app's `genui-schema.ts`, since the server validates with that one.
 | `f` | fullscreen |
 | `o` | overview (click a slide to jump) |
 | `p` | open the presenter window (notes, next slide, timer) |
+| `s` | demo: start / pause / resume |
+| `r` | demo: reset |
+| `.` | demo: skip to the end |
 
 - The current slide is in the URL hash (`#12`), so reloads keep the position.
 - The presenter window (`?presenter`) and the audience window stay in sync.
   Demos are interactive in the audience window; the presenter window shows
-  them in their final state.
+  them in their final state, but `s` / `r` / `.` pressed there drive the
+  demo in the audience window.
 - **PDF**: open `?print` and print to PDF (page size 1280×720, no margins,
   background graphics on). Demos are printed in their finished state.
 

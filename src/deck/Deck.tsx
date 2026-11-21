@@ -50,6 +50,7 @@ function AudienceView({ slides }: { slides: Slide[] }) {
     first: () => nav.goto(0),
     last: () => nav.goto(total - 1),
     goto: nav.goto,
+    demo: nav.demo,
     toggleOverview: () => setOverview((v) => !v),
     openPresenter,
     escape: () => setOverview(false),

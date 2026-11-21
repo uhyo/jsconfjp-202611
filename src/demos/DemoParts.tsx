@@ -2,6 +2,9 @@
 import { useLayoutEffect, useRef } from "react";
 import type { ReactNode } from "react";
 
+import { useSlideContext } from "../deck/context";
+import { useDemoCommands } from "../deck/navigation";
+
 import type { PlayerSnapshot, StreamPlayer } from "./player";
 
 const SPEEDS = [0.5, 1, 2, 4];
@@ -14,37 +17,49 @@ interface ControlsProps {
   children?: ReactNode;
 }
 
-/** ▶ / ⏸, ↺, ⏭ and speed, for one or several players at once. */
+/**
+ * ▶ / ⏸, ↺, ⏭ and speed, for one or several players at once. Also driven
+ * by the deck's demo keys: `s` (▶ / ⏸), `r` (↺), `.` (⏭).
+ */
 export function StreamControls({ players, snapshots, onReset, children }: ControlsProps) {
   const playing = snapshots.some((s) => s.status === "playing");
   const done = snapshots.every((s) => s.status === "done");
   const speed = players[0]?.speed ?? 1;
+  const toggle = () => {
+    for (const p of players) {
+      if (playing) p.pause();
+      else p.play();
+    }
+  };
+  const finish = () => {
+    for (const p of players) p.finish();
+  };
+  const { mode } = useSlideContext();
+  useDemoCommands((command) => {
+    if (command === "toggle") toggle();
+    else if (command === "reset") onReset();
+    else finish();
+  }, mode === "main");
   return (
     <div className="demo-controls">
       <button
         type="button"
         className="demo-btn demo-btn--primary"
         disabled={done}
-        onClick={() => {
-          for (const p of players) {
-            if (playing) p.pause();
-            else p.play();
-          }
-        }}
+        onClick={toggle}
+        title="再生 / 一時停止 (s)"
       >
         {playing ? "⏸ 一時停止" : snapshots.some((s) => s.position > 0) ? "▶ 再開" : "▶ 開始"}
       </button>
-      <button type="button" className="demo-btn" onClick={onReset} title="最初から">
+      <button type="button" className="demo-btn" onClick={onReset} title="最初から (r)">
         ↺
       </button>
       <button
         type="button"
         className="demo-btn"
         disabled={done}
-        onClick={() => {
-          for (const p of players) p.finish();
-        }}
-        title="最後まで"
+        onClick={finish}
+        title="最後まで (.)"
       >
         ⏭
       </button>

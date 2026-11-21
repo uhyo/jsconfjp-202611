@@ -26,7 +26,8 @@ function useNow(intervalMs: number): number {
 /**
  * The speaker's window (`?presenter`, or press `p` in the deck): current and
  * next slide, notes, and a timer. Navigating here moves the audience window
- * too (and vice versa). Demos are interactive only in the audience window.
+ * too (and vice versa). Demos are interactive only in the audience window,
+ * but the demo keys (`s`, `r`, `.`) pressed here drive them there.
  */
 export function Presenter({ slides }: { slides: Slide[] }) {
   const total = slides.length;
@@ -43,6 +44,7 @@ export function Presenter({ slides }: { slides: Slide[] }) {
     first: () => nav.goto(0),
     last: () => nav.goto(total - 1),
     goto: nav.goto,
+    demo: nav.demo,
   });
 
   const current = slides[nav.index];

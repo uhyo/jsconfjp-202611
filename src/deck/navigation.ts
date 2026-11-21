@@ -7,7 +7,33 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 const CHANNEL = "jsconfjp-202611-slides";
 
-type SyncMessage = { type: "goto"; index: number };
+/** What the demo keys (`s`, `r`, `.`) ask the current slide's demo to do. */
+export type DemoCommand = "toggle" | "reset" | "finish";
+
+/** Window event carrying a `DemoCommand`, heard by `useDemoCommands`. */
+const DEMO_EVENT = "deck:demo";
+
+type SyncMessage = { type: "goto"; index: number } | { type: "demo"; command: DemoCommand };
+
+function dispatchDemoCommand(command: DemoCommand): void {
+  window.dispatchEvent(new CustomEvent<DemoCommand>(DEMO_EVENT, { detail: command }));
+}
+
+/**
+ * Run `handler` on demo commands — from this window's keys or, over the
+ * BroadcastChannel, the presenter window's. Only pass `enabled` for the
+ * slide rendered in `"main"` mode, so previews and print ignore them.
+ */
+export function useDemoCommands(handler: (command: DemoCommand) => void, enabled: boolean): void {
+  const ref = useRef(handler);
+  ref.current = handler;
+  useEffect(() => {
+    if (!enabled) return;
+    const onCommand = (event: Event) => ref.current((event as CustomEvent<DemoCommand>).detail);
+    window.addEventListener(DEMO_EVENT, onCommand);
+    return () => window.removeEventListener(DEMO_EVENT, onCommand);
+  }, [enabled]);
+}
 
 function readHash(total: number): number {
   const n = Number.parseInt(location.hash.replace(/^#\/?/, ""), 10);
@@ -24,6 +50,8 @@ export interface Navigation {
   goto(index: number): void;
   next(): void;
   prev(): void;
+  /** Send a command to the current slide's demo, here and in synced windows. */
+  demo(command: DemoCommand): void;
 }
 
 export function useNavigation(total: number): Navigation {
@@ -48,6 +76,7 @@ export function useNavigation(total: number): Navigation {
     const bc = new BroadcastChannel(CHANNEL);
     bc.onmessage = (event: MessageEvent<SyncMessage>) => {
       if (event.data?.type === "goto") setIndex(clamp(event.data.index, total));
+      else if (event.data?.type === "demo") dispatchDemoCommand(event.data.command);
     };
     channel.current = bc;
     return () => {
@@ -75,7 +104,12 @@ export function useNavigation(total: number): Navigation {
   const next = useCallback(() => goto(indexRef.current + 1), [goto]);
   const prev = useCallback(() => goto(indexRef.current - 1), [goto]);
 
-  return { index, goto, next, prev };
+  const demo = useCallback((command: DemoCommand) => {
+    dispatchDemoCommand(command);
+    channel.current?.postMessage({ type: "demo", command } satisfies SyncMessage);
+  }, []);
+
+  return { index, goto, next, prev, demo };
 }
 
 /** Is the keyboard event aimed at something that takes text input? */
@@ -93,6 +127,7 @@ export interface KeyHandlers {
   first(): void;
   last(): void;
   goto(index: number): void;
+  demo?(command: DemoCommand): void;
   toggleOverview?(): void;
   openPresenter?(): void;
   escape?(): void;
@@ -100,6 +135,7 @@ export interface KeyHandlers {
 
 /**
  * Deck keyboard shortcuts. Typing a number then Enter jumps to that slide.
+ * `s` / `r` / `.` play-pause / reset / finish the current slide's demo.
  * Presentation clickers send PageUp/PageDown (some send arrows), which are
  * covered.
  */
@@ -148,6 +184,15 @@ export function useDeckKeys(handlers: KeyHandlers): void {
         case "f":
           if (document.fullscreenElement) void document.exitFullscreen();
           else void document.documentElement.requestFullscreen();
+          break;
+        case "s":
+          h.demo?.("toggle");
+          break;
+        case "r":
+          h.demo?.("reset");
+          break;
+        case ".":
+          h.demo?.("finish");
           break;
         case "o":
           h.toggleOverview?.();
