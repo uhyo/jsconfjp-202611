@@ -14,6 +14,7 @@
  * (`INGENUI_DEMO_URL`, see `vite.config.ts`); a production build calls it
  * directly (CORS, allowed by the Worker's `ALLOWED_ORIGINS`).
  */
+import type { ActionData } from "ingenui";
 
 /**
  * The server's origin, or `""` for same-origin `/api` (the Vite proxy). A
@@ -71,8 +72,6 @@ export async function fetchClaudeConfig(): Promise<ClaudeConfig> {
   return body.claude;
 }
 
-/** An action's reported values, by field name (a repeated name lists them all). */
-export type ActionData = Readonly<Record<string, string | readonly string[]>>;
 
 export interface NextTurnInput {
   /** The previous assistant message, as streamed (`""` before the first). */

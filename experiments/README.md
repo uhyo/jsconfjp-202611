@@ -14,10 +14,7 @@ produces a UI that is valid and shows what was asked.
 - **Prompts** (`prompts.ts`): each library's own system prompt for that
   catalog, `formatGenUiPrompt(schema)` (after a one-line role) and
   `catalog.prompt()` (json-render's default `standalone` mode). The user
-  message is the same for both. The ingenui prompt gets the fix for its
-  "Output raw JSX only — no prose, no markdown code fences" line (it
-  contradicted the Markdown + ui+jsx format) until that fix is published
-  (`withEmbeddedContract`).
+  message is the same for both.
 - **Tasks** (`tasks.ts`): 8 UI requests in Japanese that spell out all the
   data (product card, dashboard, profile, order status, weather, plan
   comparison, team list, incident report).

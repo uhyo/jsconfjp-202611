@@ -2,11 +2,11 @@
  * The real thing: chat with Claude through ingenui's demo server. Replies
  * stream through the server's `pipeGenUi` into `useGenUiMessage`; clicking
  * a button (or a form's submit) wired to `actions.*` asks the server for
- * the next turn (`/api/next`) and sends it, with what the user entered. The left pane shows the raw text of the latest
- * reply as it arrives.
+ * the next turn (`/api/next`) and sends it, with what the user entered.
+ * The left pane shows the raw text of the latest reply as it arrives.
  */
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import type { ActionEvent, GenUiIssue, UiBlockWrapperProps } from "ingenui";
+import type { ActionData, GenUiIssue, UiBlockWrapperProps } from "ingenui";
 import { useGenUiMessage } from "ingenui/react";
 
 import { useSlideContext } from "../deck/context";
@@ -14,7 +14,6 @@ import {
   fetchClaudeConfig,
   fetchNextTurn,
   streamChat,
-  type ActionData,
   type ChatMessage,
   type ClaudeConfig,
 } from "./claude-api";
@@ -49,24 +48,6 @@ interface Reply {
 /** A fired action, as sent to the server: its name and the values it reported. */
 type ActionRequest = { action: string; data?: ActionData };
 type ChatRequest = { text: string } | ActionRequest;
-
-/**
- * What the user entered, when the action was called with a form's submit
- * event (the `Form` component passes it on): every field by name, plus the
- * submitter. The server normalizes these (untrusted) values into the
- * message it writes.
- */
-function actionData({ args }: ActionEvent): ActionData | undefined {
-  const event = args[0] as { target?: unknown; nativeEvent?: { submitter?: unknown } } | undefined;
-  if (!(event?.target instanceof HTMLFormElement)) return undefined;
-  const submitter = event.nativeEvent?.submitter;
-  const form = new FormData(event.target, submitter instanceof HTMLElement ? submitter : null);
-  const data: Record<string, string[]> = {};
-  for (const [key, value] of form) {
-    if (typeof value === "string") (data[key] ??= []).push(value);
-  }
-  return Object.fromEntries(Object.entries(data).map(([key, values]) => [key, values.length === 1 ? values[0]! : values]));
-}
 
 /** How a fired action shows in the chat. */
 function actionLabel({ action, data }: ActionRequest): string {
@@ -316,12 +297,11 @@ function AssistantReply({
     ...genUi,
     Pending: Shimmer,
     wrapUiBlock: UiBlockFrame,
-    // Only the name and the entered values go to the server, which writes
-    // the message itself. Read the form now: the event is the live one.
-    onAction: (event) => {
-      const data = actionData(event);
-      onAction({ action: event.name, ...(data !== undefined && { data }) });
-    },
+    // Only the name and the entered values (`event.data`: ingenui reads
+    // them from the form's submit event) go to the server, which writes the
+    // message itself.
+    onAction: (event) =>
+      onAction({ action: event.name, ...(event.data !== undefined && { data: event.data }) }),
     onIssue: (issue) => {
       if (issue.kind === "render-error") {
         renderErrors.current.push({
