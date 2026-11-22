@@ -80,6 +80,52 @@ body {
   transition: width 0.2s;
 }
 
+/* Touch navigation: only on devices without a mouse (phones, tablets). */
+.touch-controls {
+  display: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .touch-controls {
+    position: fixed;
+    right: max(12px, env(safe-area-inset-right));
+    bottom: max(12px, env(safe-area-inset-bottom));
+    z-index: 5;
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    border-radius: 999px;
+    background: rgb(0 0 0 / 0.55);
+    font: 15px/1 var(--font-sans);
+  }
+
+  .touch-controls button {
+    min-width: 44px;
+    height: 44px;
+    padding: 0 8px;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: #fff;
+    font: inherit;
+    font-size: 26px;
+    touch-action: manipulation;
+  }
+
+  .touch-controls .touch-controls__page {
+    font-size: 15px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .touch-controls button:disabled {
+    opacity: 0.35;
+  }
+
+  .touch-controls button:active:not(:disabled) {
+    background: rgb(255 255 255 / 0.2);
+  }
+}
+
 /* ── The slide ───────────────────────────────────────────── */
 
 .slide {

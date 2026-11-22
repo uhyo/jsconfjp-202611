@@ -213,3 +213,72 @@ export function useDeckKeys(handlers: KeyHandlers): void {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 }
+
+/** Does `target` sit inside something the user can scroll sideways? */
+function inHorizontalScroller(target: EventTarget | null): boolean {
+  for (let el = target instanceof Element ? target : null; el; el = el.parentElement) {
+    if (el.scrollWidth > el.clientWidth) {
+      const { overflowX } = getComputedStyle(el);
+      if (overflowX === "auto" || overflowX === "scroll") return true;
+    }
+  }
+  return false;
+}
+
+/** Minimum horizontal travel (CSS px) for a swipe. */
+const SWIPE_DISTANCE = 50;
+/** Longer touches are drags (selecting text, etc.), not swipes. */
+const SWIPE_MAX_MS = 800;
+
+/**
+ * Touch swipes: swipe left for the next slide, right for the previous one.
+ * Ignores multi-finger gestures, pinch-zoomed pages (the finger is panning),
+ * mostly-vertical moves, and touches that start in a text field or a
+ * sideways-scrollable box.
+ */
+export function useSwipe(handlers: { next(): void; prev(): void }, enabled = true): void {
+  const ref = useRef(handlers);
+  ref.current = handlers;
+  useEffect(() => {
+    if (!enabled) return;
+    let start: { x: number; y: number; time: number } | null = null;
+    const onStart = (event: TouchEvent) => {
+      const touch = event.touches[0];
+      const zoomed = (window.visualViewport?.scale ?? 1) > 1.01;
+      if (
+        event.touches.length !== 1 ||
+        !touch ||
+        zoomed ||
+        isTypingTarget(event.target) ||
+        inHorizontalScroller(event.target)
+      ) {
+        start = null;
+        return;
+      }
+      start = { x: touch.clientX, y: touch.clientY, time: event.timeStamp };
+    };
+    const onEnd = (event: TouchEvent) => {
+      const touch = event.changedTouches[0];
+      const s = start;
+      start = null;
+      if (!s || !touch || event.touches.length > 0) return;
+      const dx = touch.clientX - s.x;
+      const dy = touch.clientY - s.y;
+      if (event.timeStamp - s.time > SWIPE_MAX_MS) return;
+      if (Math.abs(dx) < SWIPE_DISTANCE || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+      if (dx < 0) ref.current.next();
+      else ref.current.prev();
+    };
+    const onCancel = () => {
+      start = null;
+    };
+    window.addEventListener("touchstart", onStart, { passive: true });
+    window.addEventListener("touchend", onEnd, { passive: true });
+    window.addEventListener("touchcancel", onCancel, { passive: true });
+    return () => {
+      window.removeEventListener("touchstart", onStart);
+      window.removeEventListener("touchend", onEnd);
+      window.removeEventListener("touchcancel", onCancel);
+    };
+  }, [enabled]);
+}

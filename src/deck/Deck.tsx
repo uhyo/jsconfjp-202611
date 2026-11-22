@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { useDeckKeys, useNavigation } from "./navigation";
+import { useDeckKeys, useNavigation, useSwipe } from "./navigation";
 import { Overview } from "./Overview";
 import { Presenter } from "./Presenter";
 import { ScaledSlide, SlideView } from "./SlideView";
@@ -55,6 +55,7 @@ function AudienceView({ slides }: { slides: Slide[] }) {
     openPresenter,
     escape: () => setOverview(false),
   });
+  useSwipe({ next: nav.next, prev: nav.prev }, !overview);
 
   const slide = slides[nav.index];
   return (
@@ -65,6 +66,15 @@ function AudienceView({ slides }: { slides: Slide[] }) {
         )}
       </ScaledSlide>
       <div className="progress" style={{ width: `${((nav.index + 1) / total) * 100}%` }} />
+      {!overview && (
+        <TouchControls
+          index={nav.index}
+          total={total}
+          onPrev={nav.prev}
+          onNext={nav.next}
+          onOverview={() => setOverview(true)}
+        />
+      )}
       {overview && (
         <Overview
           slides={slides}
@@ -77,6 +87,39 @@ function AudienceView({ slides }: { slides: Slide[] }) {
         />
       )}
     </div>
+  );
+}
+
+interface TouchControlsProps {
+  index: number;
+  total: number;
+  onPrev(): void;
+  onNext(): void;
+  onOverview(): void;
+}
+
+/**
+ * ‹ n / N › and the overview, for touch screens with no keyboard (shown
+ * only there, see `deck.css`). Swiping works too (`useSwipe`).
+ */
+function TouchControls({ index, total, onPrev, onNext, onOverview }: TouchControlsProps) {
+  return (
+    <nav className="touch-controls" aria-label="Slide navigation">
+      <button type="button" onClick={onPrev} disabled={index === 0} aria-label="前のスライド">
+        ‹
+      </button>
+      <button type="button" className="touch-controls__page" onClick={onOverview} aria-label="一覧">
+        {index + 1} / {total}
+      </button>
+      <button
+        type="button"
+        onClick={onNext}
+        disabled={index === total - 1}
+        aria-label="次のスライド"
+      >
+        ›
+      </button>
+    </nav>
   );
 }
 
